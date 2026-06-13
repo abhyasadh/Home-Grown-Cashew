@@ -571,12 +571,12 @@ class HomePageEditRowEntry extends StatelessWidget {
         children: [
           getPlatform() == PlatformOS.isIOS
               ? CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
+                  activeTrackColor: Theme.of(context).colorScheme.primary,
                   value: switchValue,
                   onChanged: (value) => toggleSwitch(),
                 )
               : Switch(
-                  activeColor: Theme.of(context).colorScheme.primary,
+                  activeThumbColor: Theme.of(context).colorScheme.primary,
                   value: switchValue,
                   onChanged: (value) => toggleSwitch(),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

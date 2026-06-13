@@ -5,6 +5,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 // Examples can assume:
 // class MyDataObject {}
@@ -362,6 +363,9 @@ class ReorderableListState extends State<ReorderableList> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
+      scrollCacheExtent: widget.cacheExtent != null
+          ? ScrollCacheExtent.pixels(widget.cacheExtent!)
+          : null,
       scrollDirection: widget.scrollDirection,
       reverse: widget.reverse,
       controller: widget.controller,
@@ -369,7 +373,6 @@ class ReorderableListState extends State<ReorderableList> {
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
       anchor: widget.anchor,
-      cacheExtent: widget.cacheExtent,
       dragStartBehavior: widget.dragStartBehavior,
       keyboardDismissBehavior: widget.keyboardDismissBehavior,
       restorationId: widget.restorationId,

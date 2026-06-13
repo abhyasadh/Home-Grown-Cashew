@@ -477,8 +477,8 @@ class _CyclePeriodSelectionState extends State<CyclePeriodSelection> {
               textColor: Theme.of(context).brightness == Brightness.dark &&
                       appStateSettings["materialYou"] == false &&
                       widget.selected
-                  ? getColor(context, "black").withOpacity(
-                      0.5) //Fix contrast when selected and not material you and dark mode
+                  ? getColor(context, "black").withValues(
+                      alpha: 0.5) //Fix contrast when selected and not material you and dark mode
                   : getColor(context, "textLight"),
               textAlign: TextAlign.center,
             ),

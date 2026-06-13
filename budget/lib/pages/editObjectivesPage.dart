@@ -9,7 +9,6 @@ import 'package:budget/pages/objectivesListPage.dart';
 import 'package:budget/struct/currencyFunctions.dart';
 import 'package:budget/struct/databaseGlobal.dart';
 import 'package:budget/struct/settings.dart';
-import 'package:budget/widgets/animatedExpanded.dart';
 import 'package:budget/widgets/categoryIcon.dart';
 import 'package:budget/widgets/dropdownSelect.dart';
 import 'package:budget/widgets/fab.dart';
@@ -265,7 +264,7 @@ class _EditObjectivesPageState extends State<EditObjectivesPage> {
                                               : "expense-goal".tr(),
                                   fontSize: 14,
                                   textColor: getColor(context, "black")
-                                      .withOpacity(0.65),
+                                      .withValues(alpha: 0.65),
                                 ),
                                 WatchTotalAndAmountOfObjective(
                                   objective: objective,
@@ -311,7 +310,7 @@ class _EditObjectivesPageState extends State<EditObjectivesPage> {
                                               amountRemainingLabel),
                                       fontSize: 14,
                                       textColor: getColor(context, "black")
-                                          .withOpacity(0.65),
+                                          .withValues(alpha: 0.65),
                                       maxLines: 2,
                                     );
                                   },

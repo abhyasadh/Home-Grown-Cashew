@@ -101,7 +101,7 @@ class PieChartWrapper extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .secondaryContainer
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                     ),
                   )
                 : PieChartDisplay(
@@ -122,8 +122,8 @@ class PieChartWrapper extends StatelessWidget {
                     ? 105
                     : 130,
                 decoration: BoxDecoration(
-                  color: middleColor?.withOpacity(0.2) ??
-                      getColor(context, "white").withOpacity(0.2),
+                  color: middleColor?.withValues(alpha: 0.2) ??
+                      getColor(context, "white").withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -140,7 +140,7 @@ class PieChartWrapper extends StatelessWidget {
                     : 110,
                 decoration: BoxDecoration(
                     color:
-                        middleColor ?? Theme.of(context).colorScheme.background,
+                        middleColor ?? Theme.of(context).colorScheme.surface,
                     shape: BoxShape.circle),
               ),
             ),
@@ -284,9 +284,9 @@ class PieChartDisplayState extends State<PieChartDisplay> {
                   : 136.0;
       final double widgetScale = isTouched ? 1.3 : 1.0;
       bool isTouchingSameColorSection = false;
-      if (nullIfIndexOutOfRange(widget.data, i - 1)?.category?.colour ==
+      if (nullIfIndexOutOfRange(widget.data, i - 1)?.category.colour ==
               widget.data[i].category.colour ||
-          nullIfIndexOutOfRange(widget.data, i + 1)?.category?.colour ==
+          nullIfIndexOutOfRange(widget.data, i + 1)?.category.colour ==
               widget.data[i].category.colour) {
         isTouchingSameColorSection = true;
       }
@@ -402,7 +402,7 @@ class _Badge extends StatelessWidget {
                             color: color,
                             width: 1.5,
                           ),
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                         child: Center(
                           child: MediaQuery(
@@ -413,7 +413,7 @@ class _Badge extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                             data: MediaQuery.of(context)
-                                .copyWith(textScaleFactor: 1.0),
+                                .copyWith(textScaler: TextScaler.linear(1.0)),
                           ),
                         ),
                       ),
@@ -424,7 +424,7 @@ class _Badge extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.surface,
                 ),
                 child: Center(
                   // child: SimpleShadow(

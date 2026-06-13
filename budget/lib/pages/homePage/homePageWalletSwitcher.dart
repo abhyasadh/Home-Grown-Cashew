@@ -156,7 +156,7 @@ class EditHomePagePinnedWalletsPopup extends StatelessWidget {
                   TransactionWallet? wallet = walletsIndexedByPk[walletPk];
                   return HexColor(wallet?.colour,
                           defaultColor: Theme.of(context).colorScheme.primary)
-                      .withOpacity(selected == true ? 0.7 : 0.5);
+                      .withValues(alpha: selected == true ? 0.7 : 0.5);
                 },
                 displayFilter: (walletPk) {
                   TransactionWallet? wallet = walletsIndexedByPk[walletPk];

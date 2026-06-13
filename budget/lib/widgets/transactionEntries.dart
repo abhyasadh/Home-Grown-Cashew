@@ -245,7 +245,7 @@ class _TransactionEntriesState extends State<TransactionEntries> {
                                     ")")
                                 : ""),
                     tintColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                     noSearchResultsVariation: widget.noSearchResultsVariation,
                     padding: widget.noResultsPadding,
                   ),
@@ -283,7 +283,7 @@ class _TransactionEntriesState extends State<TransactionEntries> {
           DateTime? currentDate;
           int totalPastUniqueDays = 0;
 
-          for (TransactionWithCategory transactionWithCategory in data ?? []) {
+          for (TransactionWithCategory transactionWithCategory in data) {
             if (widget.pastDaysLimitToShow != null &&
                 totalPastUniqueDays > widget.pastDaysLimitToShow!) break;
 
@@ -917,7 +917,7 @@ class FutureTransactionsDivider extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .secondary
-                              .withOpacity(Theme.of(context).brightness ==
+                              .withValues(alpha: Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? 0.1
                                   : 0.2),
