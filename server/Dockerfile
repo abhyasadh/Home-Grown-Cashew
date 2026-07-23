@@ -1,5 +1,5 @@
 # Stage 1: Build the Flutter web app
-FROM ghcr.io/cirruslabs/flutter:3.44.2 AS web-builder
+FROM ghcr.io/cirruslabs/flutter:stable AS web-builder
 
 WORKDIR /app
 COPY budget/pubspec.yaml budget/pubspec.lock ./
