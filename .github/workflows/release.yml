@@ -33,6 +33,29 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Generate release keystore
+        working-directory: budget/android
+        run: |
+          keytool -genkey -v \
+            -keystore release-key.jks \
+            -alias release \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass "${{ secrets.KEYSTORE_PASSWORD || 'android' }}" \
+            -keypass "${{ secrets.KEY_PASSWORD || 'android' }}" \
+            -dname "CN=Home Grown Cashew"
+
+      - name: Create key.properties
+        working-directory: budget/android
+        run: |
+          cat > key.properties <<EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD || 'android' }}
+          keyPassword=${{ secrets.KEY_PASSWORD || 'android' }}
+          keyAlias=release
+          storeFile=release-key.jks
+          EOF
+
       - name: Build APK
         run: flutter build apk --release
 
