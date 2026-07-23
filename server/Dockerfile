@@ -2,7 +2,7 @@
 FROM ghcr.io/cirruslabs/flutter:stable AS web-builder
 
 WORKDIR /app
-COPY budget/pubspec.yaml budget/pubspec.lock ./
+COPY budget/pubspec.yaml ./
 RUN flutter pub get
 COPY budget/ ./
 RUN flutter build web --release
