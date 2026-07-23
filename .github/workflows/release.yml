@@ -34,7 +34,7 @@ jobs:
         run: flutter pub get
 
       - name: Generate release keystore
-        working-directory: budget/android
+        working-directory: budget/android/app
         run: |
           keytool -genkey -v \
             -keystore release-key.jks \
@@ -47,9 +47,9 @@ jobs:
             -dname "CN=Home Grown Cashew"
 
       - name: Create key.properties
-        working-directory: budget/android
+        working-directory: budget/android/app
         run: |
-          cat > key.properties <<EOF
+          cat > ../key.properties <<EOF
           storePassword=${{ secrets.KEYSTORE_PASSWORD || 'android' }}
           keyPassword=${{ secrets.KEY_PASSWORD || 'android' }}
           keyAlias=release
