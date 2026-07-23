@@ -92,11 +92,13 @@ Future<bool> saveFile({
 
       final box = boxContext.findRenderObject() as RenderBox?;
       if (box != null) {
-        ShareResult result = await Share.shareXFiles(
-          files,
-          subject: fileName,
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-          fileNameOverrides: [fileName],
+        ShareResult result = await SharePlus.instance.share(
+          ShareParams(
+            files: files,
+            subject: fileName,
+            sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+            fileNameOverrides: [fileName],
+          ),
         );
         if (result.status != ShareResultStatus.success) {
           throw ("No application selected");

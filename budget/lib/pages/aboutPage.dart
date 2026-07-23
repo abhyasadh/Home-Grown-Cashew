@@ -10,7 +10,6 @@ import 'package:budget/struct/databaseGlobal.dart';
 import 'package:budget/struct/languageMap.dart';
 import 'package:budget/struct/settings.dart';
 import 'package:budget/widgets/button.dart';
-import 'package:budget/widgets/framework/popupFramework.dart';
 import 'package:budget/widgets/moreIcons.dart';
 import 'package:budget/widgets/navigationSidebar.dart';
 import 'package:budget/widgets/openBottomSheet.dart';
@@ -763,50 +762,7 @@ void deleteAllDataFlow(BuildContext context) {
     onExtraLabel2: "erase-synced-data-and-cloud-backups".tr(),
     onExtra2: () {
       popRoute(context);
-      openBottomSheet(
-        context,
-        PopupFramework(
-          title: "erase-cloud-data".tr(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  bottom: 18,
-                  start: 5,
-                  end: 5,
-                ),
-                child: TextFont(
-                  text: "erase-cloud-data-description".tr(),
-                  fontSize: 16.5,
-                  textAlign: TextAlign.center,
-                  maxLines: 10,
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SyncCloudBackupButton(
-                      onTap: () async {
-                        popRoute(context);
-                        pushRoute(context, AccountsPage());
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 18),
-                  Expanded(
-                    child: BackupsCloudBackupButton(
-                      onTap: () async {
-                        popRoute(context);
-                        pushRoute(context, AccountsPage());
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
+      pushRoute(context, AccountsPage());
     },
     onSubmit: () async {
       popRoute(context);

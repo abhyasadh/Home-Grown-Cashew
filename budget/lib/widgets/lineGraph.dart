@@ -213,19 +213,15 @@ class _LineChartState extends State<_LineChart> with WidgetsBindingObserver {
               value,
               titleMeta,
             ) {
-              bool show = false;
               if (value == titleMeta.max || value == titleMeta.min) {
                 return SizedBox.shrink();
               } else if (value == 0) {
-                show = true;
               } else if (value < widget.maxPair.y &&
                   value > 1 &&
                   value < titleMeta.max) {
-                show = true;
               } else if (value > widget.minPair.y &&
                   value < 1 &&
                   value > titleMeta.min) {
-                show = true;
               } else {
                 return SizedBox.shrink();
               }
@@ -463,7 +459,7 @@ class _LineChartState extends State<_LineChart> with WidgetsBindingObserver {
       dotData: FlDotData(show: false),
       isCurved: widget.isCurved,
       curveSmoothness:
-          appStateSettings["removeZeroTransactionEntries"] ? 0.1 : 0.3,
+          appStateSettings["removeZeroTransactionEntries"] == true ? 0.1 : 0.3,
       preventCurveOverShooting: true,
       preventCurveOvershootingThreshold: 8,
       aboveBarData: BarAreaData(
@@ -578,8 +574,8 @@ class LineChartWrapper extends StatelessWidget {
 
   List<Pair> filterPoints(List<Pair> points) {
     List<Pair> pointsOut = [];
-    if (appStateSettings["removeZeroTransactionEntries"] &&
-        !appStateSettings["showCumulativeSpending"]) {
+    if (appStateSettings["removeZeroTransactionEntries"] == true &&
+        appStateSettings["showCumulativeSpending"] != true) {
       for (Pair point in points) {
         if (point.y != 0) {
           pointsOut.add(Pair(point.x, point.y));
@@ -593,8 +589,8 @@ class LineChartWrapper extends StatelessWidget {
           : 0;
       return pointsOut;
     }
-    if (appStateSettings["removeZeroTransactionEntries"] &&
-        appStateSettings["showCumulativeSpending"]) {
+    if (appStateSettings["removeZeroTransactionEntries"] == true &&
+        appStateSettings["showCumulativeSpending"] == true) {
       pointsOut.add(Pair(points.first.x, points.first.y));
       double previousTotal = 0;
       for (Pair point in points) {

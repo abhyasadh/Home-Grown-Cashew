@@ -391,18 +391,22 @@ class _AddObjectivePageState extends State<AddObjectivePage>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.objective != null) {
-          discardChangesPopup(
-            context,
-            previousObject: widget.objective,
-            currentObject: await createObjective(),
-          );
-        } else {
-          showDiscardChangesPopupIfNotEditing();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (widget.objective != null) {
+            createObjective().then((objective) {
+              discardChangesPopup(
+                context,
+                previousObject: widget.objective,
+                currentObject: objective,
+              );
+            });
+          } else {
+            showDiscardChangesPopupIfNotEditing();
+          }
         }
-        return false;
       },
       child: PageFramework(
         horizontalPaddingConstrained: true,

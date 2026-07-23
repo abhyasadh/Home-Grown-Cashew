@@ -212,7 +212,7 @@ class _PieChartHomeAndCategorySummaryState
   GlobalKey<PieChartDisplayState> pieChartDisplayStateKey = GlobalKey();
   late TransactionCategory? selectedCategory = widget.selectedCategory;
   bool expandCategorySelection = false;
-  bool showAllSubcategories = appStateSettings["showAllSubcategories"];
+  bool showAllSubcategories = appStateSettings["showAllSubcategories"] ?? false;
 
   @override
   void didUpdateWidget(covariant oldWidget) {

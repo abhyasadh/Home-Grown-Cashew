@@ -2,7 +2,7 @@ import 'package:budget/database/tables.dart';
 import 'package:budget/functions.dart';
 import 'package:budget/pages/addTransactionPage.dart';
 import 'package:budget/struct/databaseGlobal.dart';
-import 'package:budget/struct/shareBudget.dart';
+import 'package:budget/struct/shareBudget.dart' hide getMemberNickname;
 import 'package:budget/widgets/button.dart';
 import 'package:budget/widgets/globalSnackbar.dart';
 import 'package:budget/widgets/openBottomSheet.dart';
@@ -11,7 +11,6 @@ import 'package:budget/widgets/openSnackbar.dart';
 import 'package:budget/widgets/tappable.dart';
 import 'package:budget/widgets/textWidgets.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:budget/colors.dart';
@@ -58,7 +57,6 @@ class _SharedBudgetSettingsState extends State<SharedBudgetSettings> {
         });
         return;
       }
-      print(FirebaseAuth.instance.currentUser!.email);
       print(widget.budget.sharedOwnerMember);
       setState(() {
         members = response;

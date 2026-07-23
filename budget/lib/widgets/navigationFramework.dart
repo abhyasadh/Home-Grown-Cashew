@@ -10,7 +10,6 @@ import 'package:budget/pages/addCategoryPage.dart';
 import 'package:budget/pages/addObjectivePage.dart';
 import 'package:budget/pages/addTransactionPage.dart';
 import 'package:budget/pages/addWalletPage.dart';
-import 'package:budget/pages/autoTransactionsPageEmail.dart';
 import 'package:budget/pages/budgetsListPage.dart';
 import 'package:budget/pages/editAssociatedTitlesPage.dart';
 import 'package:budget/pages/editBudgetPage.dart';
@@ -32,8 +31,8 @@ import 'package:budget/struct/databaseGlobal.dart';
 import 'package:budget/struct/defaultPreferences.dart';
 import 'package:budget/struct/navBarIconsData.dart';
 import 'package:budget/struct/quickActions.dart';
+import 'package:budget/struct/serverAuth.dart';
 import 'package:budget/struct/settings.dart';
-import 'package:budget/struct/shareBudget.dart';
 import 'package:budget/struct/syncClient.dart';
 import 'package:budget/widgets/accountAndBackup.dart';
 import 'package:budget/widgets/bottomNavBar.dart';
@@ -65,11 +64,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lazy_indexed_stack/flutter_lazy_indexed_stack.dart';
-import 'package:googleapis/drive/v3.dart';
 import 'package:provider/provider.dart';
 // import 'package:feature_discovery/feature_discovery.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+void replaceOnboardingWithMainApp(BuildContext context) {
+  // Ensure settings reflect that onboarding is complete before replacing the route
+  updateSettings("hasOnboarded", true,
+      pagesNeedingRefresh: [], updateGlobalState: true);
+  navigatorKey.currentState?.pushReplacement(
+    PageRouteBuilder(
+      transitionDuration: Duration(milliseconds: 500),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return PageNavigationFrameworkSafeArea(
+          child: PageNavigationFramework(
+            key: pageNavigationFrameworkKey,
+            widthSideNavigationBar: getWidthNavigationSidebar(context),
+          ),
+        );
+      },
+    ),
+  );
+}
 
 // Handles onboarding too!
 class InitialPageRouteNavigator extends StatelessWidget {
@@ -216,35 +236,39 @@ class HandleWillPopScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: child,
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        if (didPop) return;
         bool popResult = await maybePopRoute(navigatorKey.currentContext);
-        if (popResult == true) return false;
+        if (popResult == true) return;
 
         // Deselect selected transactions
         int notEmpty = 0;
-        for (String key in globalSelectedID.value.keys) {
-          if (globalSelectedID.value[key]?.isNotEmpty == true) notEmpty++;
-          globalSelectedID.value[key] = [];
+        Map<String, List<String>> updatedMap = Map.from(globalSelectedID.value);
+        for (String key in updatedMap.keys) {
+          if (updatedMap[key]?.isNotEmpty == true) notEmpty++;
+          updatedMap[key] = [];
         }
-        globalSelectedID.notifyListeners();
+        globalSelectedID.value = updatedMap;
 
         // Allow the back button to exit the app when on home
         if (notEmpty <= 0) {
           if (pageNavigationFrameworkKey.currentState?.currentPage == 0) {
-            return true;
+            Navigator.of(context).pop();
+            return;
           } else {
             // Allow back button deselect a selected category first on All Spending page
             if (pageNavigationFrameworkKey.currentState?.currentPage == 7 &&
                 categoryIsSelectedOnAllSpending) {
-              return true;
+              Navigator.of(context).pop();
+              return;
             }
             pageNavigationFrameworkKey.currentState?.changePage(0);
           }
         }
-        return false;
       },
+      child: child,
     );
   }
 }
@@ -284,8 +308,6 @@ GlobalKey<UpcomingOverdueTransactionsState>
 GlobalKey<CreditDebtTransactionsState> creditDebtTransactionsKey = GlobalKey();
 GlobalKey<ProductsState> purchasesStateKey = GlobalKey();
 GlobalKey<AccountsPageState> accountsPageStateKey = GlobalKey();
-GlobalKey<GoogleAccountLoginButtonState> settingsGoogleAccountLoginButtonKey =
-    GlobalKey();
 GlobalKey<NavigationSidebarState> sidebarStateKey = GlobalKey();
 GlobalKey<GlobalLoadingProgressState> loadingProgressKey = GlobalKey();
 GlobalKey<GlobalLoadingIndeterminateState> loadingIndeterminateKey =
@@ -303,17 +325,7 @@ Future<bool> runAllCloudFunctions(BuildContext context,
   errorSigningInDuringCloud = false;
   try {
     loadingIndeterminateKey.currentState?.setVisibility(true);
-    await runForceSignIn(context);
-    await syncData(context);
-    if (appStateSettings["emailScanningPullToRefresh"] ||
-        entireAppLoaded == false) {
-      loadingIndeterminateKey.currentState?.setVisibility(true);
-      await parseEmailsInBackground(context, forceParse: true);
-    }
-    loadingIndeterminateKey.currentState?.setVisibility(true);
-    await syncPendingQueueOnServer(); //sync before download
-    loadingIndeterminateKey.currentState?.setVisibility(true);
-    await getCloudBudgets();
+    await syncDataToServer(context);
     loadingIndeterminateKey.currentState?.setVisibility(true);
     await createBackupInBackground(context);
     loadingIndeterminateKey.currentState?.setVisibility(true);
@@ -323,19 +335,6 @@ Future<bool> runAllCloudFunctions(BuildContext context,
     loadingIndeterminateKey.currentState?.setVisibility(false);
     runningCloudFunctions = false;
     canSyncData = true;
-    if (e is DetailedApiRequestError &&
-            e.status == 401 &&
-            forceSignIn == true ||
-        e is PlatformException) {
-      // Request had invalid authentication credentials. Try logging out and back in.
-      // This stems from silent sign-in not providing the credentials for GDrive API for e.g.
-      await refreshGoogleSignIn();
-      runAllCloudFunctions(context);
-    } else {
-      if (kIsWeb && appStateSettings["webForceLoginPopupOnLaunch"] == true) {
-        signOutGoogle();
-      }
-    }
     return false;
   }
   loadingIndeterminateKey.currentState?.setVisibility(false);
@@ -407,8 +406,8 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
           Theme.of(context).extension<AppColors>(),
           Theme.of(context).brightness));
 
-      bool isDatabaseCorruptedPopupShown = openDatabaseCorruptedPopup(context);
-      if (isDatabaseCorruptedPopupShown) return;
+      // Database corruption check placeholder
+      // (currently disabled)
 
       await initializeNotificationsPlatform();
 
@@ -453,12 +452,8 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
       print("Entire app loaded");
 
       database.watchAllForAutoSync().listen((event) {
-        // Must be logged in to perform an automatic sync - googleUser != null
-        // If we remove this, it will ask the user to login though - but it can be annoying
-        // Users can visually see the last time of sync, especially on web where sign-in is not automatic,
-        // so it shouldn't be an issue
-        if (runningCloudFunctions == false && googleUser != null) {
-          createSyncBackup(changeMadeSync: true);
+        if (runningCloudFunctions == false && ServerAuth.isLoggedIn) {
+          syncDataToServer(context);
         }
       });
 
@@ -490,7 +485,7 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
           index: currentPage,
           duration: !kIsWeb
               ? Duration.zero
-              : appStateSettings["batterySaver"]
+              : appStateSettings["batterySaver"] == true
                   ? Duration.zero
                   : Duration(milliseconds: 300),
         ),
@@ -617,10 +612,10 @@ class AddMoreThingsPopup extends StatelessWidget {
               return LayoutBuilder(builder: (context2, constraints) {
                 return Icon(
                   selection == "transfer-balance"
-                      ? appStateSettings["outlinedIcons"]
+                      ? appStateSettings["outlinedIcons"] == true
                           ? Icons.compare_arrows_outlined
                           : Icons.compare_arrows_rounded
-                      : appStateSettings["outlinedIcons"]
+                      : appStateSettings["outlinedIcons"] == true
                           ? Icons.library_add_outlined
                           : Icons.library_add_rounded,
                   color: Theme.of(context).colorScheme.primary,
@@ -834,10 +829,10 @@ class AddMoreThingsPopup extends StatelessWidget {
               return LayoutBuilder(builder: (context2, constraints) {
                 return Icon(
                   selection == "long-term"
-                      ? appStateSettings["outlinedIcons"]
+                      ? appStateSettings["outlinedIcons"] == true
                           ? Icons.av_timer_outlined
                           : Icons.av_timer_rounded
-                      : appStateSettings["outlinedIcons"]
+                      : appStateSettings["outlinedIcons"] == true
                           ? Icons.event_available_outlined
                           : Icons.event_available_rounded,
                   color: Theme.of(context).colorScheme.primary,

@@ -341,10 +341,10 @@ class BudgetContainer extends StatelessWidget {
           defaultColor: Theme.of(context).colorScheme.primary),
       brightness: determineBrightnessTheme(context),
     );
-    Color backgroundColor = appStateSettings["materialYou"]
+    Color backgroundColor = appStateSettings["materialYou"] == true
         ? budget.colour == null
             ? appStateSettings["accentSystemColor"] == true &&
-                    appStateSettings["materialYou"] &&
+                    appStateSettings["materialYou"] == true &&
                     appStateSettings["batterySaver"] == false
                 ? dynamicPastel(
                     context,
@@ -355,7 +355,7 @@ class BudgetContainer extends StatelessWidget {
                 : dynamicPastel(
                     context, HexColor(appStateSettings["accentColor"]),
                     amountDark: 0.8,
-                    amountLight: appStateSettings["batterySaver"] ? 0.8 : 0.92)
+                    amountLight: appStateSettings["batterySaver"] == true ? 0.8 : 0.92)
             : dynamicPastel(
                 context,
                 budgetColorScheme.secondaryContainer,
@@ -488,10 +488,10 @@ String getAmountPerDayString(
   if (isOverBudget) {
     return convertToMoney(
             Provider.of<AllWallets>(context),
-            !appStateSettings["showTotalSpentForBudget"]
+            appStateSettings["showTotalSpentForBudget"] != true
                 ? totalAmount
                 : totalAmount - budgetAmount) +
-        (appStateSettings["showTotalSpentForBudget"]
+        (appStateSettings["showTotalSpentForBudget"] == true
             ? (" " + "over".tr() + " ")
             : " / ") +
         convertToMoney(Provider.of<AllWallets>(context), budgetAmount) +
@@ -522,7 +522,7 @@ class AnimatedGooBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (appStateSettings["batterySaver"] ||
+    if (appStateSettings["batterySaver"] == true ||
         kIsWeb ||
         (getPlatform() == PlatformOS.isIOS &&
             appStateSettings["iOSAnimatedGoo"] != true) ||
@@ -850,7 +850,6 @@ class AnimatedProgress extends StatefulWidget {
 class _AnimatedProgressState extends State<AnimatedProgress> {
   bool animateIn = false;
   bool fadeIn = false;
-  Future? _future;
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
@@ -858,7 +857,7 @@ class _AnimatedProgressState extends State<AnimatedProgress> {
         animateIn = true;
       });
     });
-    _future = Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       if (mounted)
         setState(() {
           fadeIn = true;
@@ -869,7 +868,6 @@ class _AnimatedProgressState extends State<AnimatedProgress> {
 
   @override
   void dispose() {
-    _future = null;
     super.dispose();
   }
 
@@ -1192,19 +1190,21 @@ class _BudgetSpenderSummaryState extends State<BudgetSpenderSummary> {
 
           for (BudgetSpender spender in budgetSpenderList) {
             memberWidgets.add(
-              WillPopScope(
-                onWillPop: () async {
-                  if (widget.disableMemberSelection == false) {
-                    if (selectedMember == spender.member ||
-                        spender.amount == 0) {
+              PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, _) {
+                  if (!didPop) {
+                    if (widget.disableMemberSelection == false &&
+                        (selectedMember == spender.member ||
+                            spender.amount == 0)) {
                       widget.setSelectedMember(null);
                       setState(() {
                         selectedMember = null;
                       });
-                      return false;
+                    } else {
+                      Navigator.of(context).pop();
                     }
                   }
-                  return true;
                 },
                 child: Tappable(
                   onTap: () {

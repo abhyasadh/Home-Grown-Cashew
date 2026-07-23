@@ -20,27 +20,27 @@ AppColors getAppColors(
     required Color accentColor}) {
   Color lightDarkAccentHeavyLight = brightness == Brightness.light
       ? appStateSettings["accentSystemColor"] == true &&
-              appStateSettings["materialYou"] &&
+              appStateSettings["materialYou"] == true &&
               appStateSettings["batterySaver"] == false
           ? lightenPastel(
               themeData.colorScheme.primary,
               amount: 0.96,
             )
-          : appStateSettings["materialYou"]
-              ? (appStateSettings["batterySaver"]
+          : appStateSettings["materialYou"] == true
+              ? (appStateSettings["batterySaver"] == true
                   ? lightenPastel(accentColor, amount: 0.8)
                   : lightenPastel(accentColor, amount: 0.92))
-              : (appStateSettings["batterySaver"]
+              : (appStateSettings["batterySaver"] == true
                   ? Color(0xFFF3F3F3)
                   : Color(0xFFFFFFFF))
       : appStateSettings["accentSystemColor"] == true &&
-              appStateSettings["materialYou"] &&
+              appStateSettings["materialYou"] == true &&
               appStateSettings["batterySaver"] == false
           ? darkenPastel(
               themeData.colorScheme.primary,
               amount: 0.85,
             )
-          : appStateSettings["materialYou"]
+          : appStateSettings["materialYou"] == true
               ? darkenPastel(accentColor, amount: 0.8)
               : Color(0xFF242424);
   return brightness == Brightness.light
@@ -252,7 +252,7 @@ class HexColor extends Color {
     try {
       if (hexColor == null) {
         if (defaultColor == null) {
-          return Colors.grey.value;
+          return Colors.grey.toARGB32();
         } else {
           return defaultColor.toARGB32();
         }
@@ -264,7 +264,7 @@ class HexColor extends Color {
       }
       return int.parse(hexColor, radix: 16);
     } catch (e) {
-      return Colors.grey.value;
+      return Colors.grey.toARGB32();
     }
   }
 
@@ -373,9 +373,9 @@ bool supportsSystemColor() {
 }
 
 bool isGrayScale(Color color, {int threshold = 10}) {
-  int red = color.red;
-  int green = color.green;
-  int blue = color.blue;
+  int red = (color.r * 255).round();
+  int green = (color.g * 255).round();
+  int blue = (color.b * 255).round();
 
   return (red - green).abs() <= threshold &&
       (red - blue).abs() <= threshold &&
@@ -393,7 +393,7 @@ ColorScheme getColorScheme(Brightness brightness) {
     return ColorScheme.fromSeed(
       seedColor: getSettingConstants(appStateSettings)["accentColor"],
       brightness: Brightness.light,
-      background: appStateSettings["materialYou"]
+      surface: appStateSettings["materialYou"]
           ? lightenPastel(getSettingConstants(appStateSettings)["accentColor"],
               amount: 0.91)
           : Colors.white,
@@ -402,7 +402,7 @@ ColorScheme getColorScheme(Brightness brightness) {
     return ColorScheme.fromSeed(
       seedColor: getSettingConstants(appStateSettings)["accentColor"],
       brightness: Brightness.dark,
-      background: appStateSettings["forceFullDarkBackground"] == true
+      surface: appStateSettings["forceFullDarkBackground"] == true
           ? Colors.black
           : appStateSettings["materialYou"]
               ? darkenPastel(
@@ -520,9 +520,9 @@ Color getBottomNavbarBackgroundColor({
   if (getPlatform() == PlatformOS.isIOS) {
     return brightness == Brightness.light
         ? lightenPastel(colorScheme.secondaryContainer,
-            amount: appStateSettings["materialYou"] ? 0.4 : 0.55)
+            amount: appStateSettings["materialYou"] == true ? 0.4 : 0.55)
         : darkenPastel(colorScheme.secondaryContainer,
-            amount: appStateSettings["materialYou"] ? 0.4 : 0.55);
+            amount: appStateSettings["materialYou"] == true ? 0.4 : 0.55);
   } else if (appStateSettings["materialYou"] == true) {
     if (brightness == Brightness.light) {
       return lightenPastel(
@@ -559,7 +559,7 @@ class CustomColorTheme extends StatelessWidget {
     ColorScheme colorScheme = ColorScheme.fromSeed(
       seedColor: accentColor!,
       brightness: determineBrightnessTheme(context),
-      background: determineBrightnessTheme(context) == Brightness.dark
+      surface: determineBrightnessTheme(context) == Brightness.dark
           ? (appStateSettings["forceFullDarkBackground"] == true
               ? Colors.black
               : appStateSettings["materialYou"]

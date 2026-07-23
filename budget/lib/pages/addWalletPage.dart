@@ -344,18 +344,20 @@ class _AddWalletPageState extends State<AddWalletPage> {
       ));
     }
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.wallet != null) {
-          discardChangesPopup(
-            context,
-            previousObject: walletInitial,
-            currentObject: await createTransactionWallet(),
-          );
-        } else {
-          showDiscardChangesPopupIfNotEditing();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (widget.wallet != null) {
+            discardChangesPopup(
+              context,
+              previousObject: walletInitial,
+              currentObject: createTransactionWallet(),
+            );
+          } else {
+            showDiscardChangesPopupIfNotEditing();
+          }
         }
-        return false;
       },
       child: PageFramework(
         resizeToAvoidBottomInset: true,

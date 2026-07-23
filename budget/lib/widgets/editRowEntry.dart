@@ -333,7 +333,7 @@ class EditRowEntry extends StatelessWidget {
     //                       child: Container(
     //                           height: double.infinity,
     //                           width: 40,
-    //                           child: Icon(appStateSettings["outlinedIcons"] ? Icons.delete_outlined : Icons.delete_rounded)),
+    //                           child: Icon(appStateSettings["outlinedIcons"] == true ? Icons.delete_outlined : Icons.delete_rounded)),
     //                       onTap: onDelete,
     //                     )
     //                   : SizedBox.shrink(),
@@ -347,7 +347,7 @@ class EditRowEntry extends StatelessWidget {
     //                             margin: EdgeInsetsDirectional.only(end: 10),
     //                             width: 40,
     //                             height: double.infinity,
-    //                             child: Icon(appStateSettings["outlinedIcons"] ? Icons.drag_handle_outlined : Icons.drag_handle_rounded)),
+    //                             child: Icon(appStateSettings["outlinedIcons"] == true ? Icons.drag_handle_outlined : Icons.drag_handle_rounded)),
     //                         onTap: () {},
     //                       ),
     //                     )
@@ -357,7 +357,7 @@ class EditRowEntry extends StatelessWidget {
     //                         margin: EdgeInsetsDirectional.only(end: 10),
     //                         width: 40,
     //                         height: double.infinity,
-    //                         child: Icon(appStateSettings["outlinedIcons"] ? Icons.drag_handle_outlined : Icons.drag_handle_rounded),
+    //                         child: Icon(appStateSettings["outlinedIcons"] == true ? Icons.drag_handle_outlined : Icons.drag_handle_rounded),
     //                       ),
     //                     ),
     //             ],

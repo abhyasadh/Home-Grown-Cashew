@@ -44,7 +44,7 @@ class CountUp extends StatefulWidget {
 class _CountUpState extends State<CountUp> {
   @override
   Widget build(BuildContext context) {
-    if (appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] == true) {
       return TextFont(
         text: widget.prefix +
             (widget.count).toStringAsFixed(widget.decimals) +

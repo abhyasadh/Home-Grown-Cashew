@@ -16,10 +16,9 @@ import 'package:budget/struct/navBarIconsData.dart';
 import 'package:budget/struct/settings.dart';
 import 'package:budget/struct/upcomingTransactionsFunctions.dart';
 import 'package:budget/struct/uploadAttachment.dart';
-import 'package:budget/widgets/accountAndBackup.dart';
+import 'package:budget/struct/serverClient.dart';
 import 'package:budget/widgets/navigationFramework.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:budget/widgets/button.dart';
 import 'package:budget/widgets/categoryIcon.dart';
 import 'package:budget/widgets/dropdownSelect.dart';
@@ -626,9 +625,6 @@ class _AddTransactionPageState extends State<AddTransactionPage>
     bool? createdAnotherFutureTransaction = widget.transaction != null
         ? widget.transaction!.createdAnotherFutureTransaction
         : null;
-    bool paid = widget.transaction != null
-        ? widget.transaction!.paid
-        : selectedType == null;
     bool skipPaid = widget.transaction != null
         ? widget.transaction!.skipPaid
         : selectedType == null;
@@ -640,10 +636,8 @@ class _AddTransactionPageState extends State<AddTransactionPage>
 
       if ([TransactionSpecialType.credit, TransactionSpecialType.debt]
           .contains(selectedType)) {
-        paid = true;
         skipPaid = false;
       } else {
-        paid = false;
         skipPaid = false;
       }
     }
@@ -782,7 +776,7 @@ class _AddTransactionPageState extends State<AddTransactionPage>
         }
         await premiumPopupAddTransaction(context);
         if (widget.startInitialAddTransactionSequence == false) return;
-        if (appStateSettings["askForTransactionTitle"]) {
+        if (appStateSettings["askForTransactionTitle"] == true) {
           openBottomSheet(
             context,
             // Only allow full snap when entering a title
@@ -1056,7 +1050,7 @@ class _AddTransactionPageState extends State<AddTransactionPage>
         defaultColor: dynamicPastel(
           context,
           Theme.of(context).colorScheme.primary,
-          amount: appStateSettings["materialYou"] ? 0.55 : 0.2,
+          amount: appStateSettings["materialYou"] == true ? 0.55 : 0.2,
         ),
       ),
       amount: 0.35,
@@ -2020,18 +2014,20 @@ class _AddTransactionPageState extends State<AddTransactionPage>
       ),
     );
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.transaction != null) {
-          discardChangesPopup(
-            context,
-            previousObject: await addDefaultMissingValues(widget.transaction!),
-            currentObject: await createTransaction(),
-          );
-        } else {
-          showDiscardChangesPopupIfNotEditing();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (widget.transaction != null) {
+            discardChangesPopup(
+              context,
+              previousObject: widget.transaction,
+              currentObject: createTransaction(),
+            );
+          } else {
+            showDiscardChangesPopupIfNotEditing();
+          }
         }
-        return false;
       },
       child: PageFramework(
         belowAppBarPaddingWhenCenteredTitleSmall: 0,
@@ -3000,7 +2996,7 @@ class _EnterTextButtonState extends State<EnterTextButton> {
 
 Future<bool> addAssociatedTitles(
     String selectedTitle, TransactionCategory selectedCategory) async {
-  if (appStateSettings["autoAddAssociatedTitles"]) {
+  if (appStateSettings["autoAddAssociatedTitles"] == true) {
     try {
       TransactionAssociatedTitleWithCategory? foundTitle =
           (await database.getSimilarAssociatedTitles(
@@ -4135,38 +4131,17 @@ String? getFileIdFromUrl(String url) {
 Future<List<int>?> getGoogleDriveFileImageData(String url) async {
   dynamic result = await openLoadingPopupTryCatch(
     () async {
-      String? fileId = getFileIdFromUrl(url);
-      if (fileId == null) throw ("No file id found!");
-
-      if (googleUser == null) {
-        await signInGoogle(drivePermissionsAttachments: true);
+      // Extract attachment ID from URL
+      String attachmentId = url;
+      if (url.contains('/')) {
+        attachmentId = url.split('/').last;
       }
 
-      final authHeaders = await googleUser!.authHeaders;
-      final authenticateClient = GoogleAuthClient(authHeaders);
-      drive.DriveApi driveApi = drive.DriveApi(authenticateClient);
-
-      List<int> dataStore = [];
-
-      drive.File fileMetadata =
-          await driveApi.files.get(fileId, $fields: 'size') as drive.File;
-      int totalBytes = int.parse(fileMetadata.size ?? "0");
-
-      dynamic response = await driveApi.files
-          .get(fileId, downloadOptions: drive.DownloadOptions.fullMedia);
-
-      num receivedBytes = 0;
-
-      loadingProgressKey.currentState?.setProgressPercentage(0);
-
-      await for (var data in response.stream) {
-        dataStore.insertAll(dataStore.length, data);
-        receivedBytes += data.length;
-        double progress = receivedBytes / totalBytes;
-        loadingProgressKey.currentState?.setProgressPercentage(progress);
+      final response = await ServerClient.downloadFile('/api/attachments/$attachmentId');
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
       }
-      loadingProgressKey.currentState?.setProgressPercentage(0);
-      return dataStore;
+      throw ("Failed to download attachment");
     },
     onError: (error) {
       loadingProgressKey.currentState?.setProgressPercentage(0);

@@ -67,13 +67,13 @@ Future<T?> openPopup<T extends Object?>(
               Theme.of(context).brightness == Brightness.light
           ? dynamicPastel(context, Theme.of(context).colorScheme.tertiary,
               amount: 0.3)
-          : appStateSettings["materialYou"]
+          : appStateSettings["materialYou"] == true
               ? dynamicPastel(context, Theme.of(context).colorScheme.tertiary,
                   amount: 0.15)
               : dynamicPastel(
                   context, Theme.of(context).colorScheme.tertiaryContainer,
                   amount: 0.15);
-      Color onTertiaryButtonColor = appStateSettings["materialYou"] ||
+      Color onTertiaryButtonColor = appStateSettings["materialYou"] == true ||
               Theme.of(context).brightness == Brightness.light
           ? dynamicPastel(context, Theme.of(context).colorScheme.onTertiary,
               amount: 0.25)
@@ -82,11 +82,11 @@ Future<T?> openPopup<T extends Object?>(
               Theme.of(context).brightness == Brightness.light
           ? dynamicPastel(context, Theme.of(context).colorScheme.primary,
               amount: 0.3)
-          : appStateSettings["materialYou"]
+          : appStateSettings["materialYou"] == true
               ? dynamicPastel(context, Theme.of(context).colorScheme.primary,
                   amount: 0.15)
               : Theme.of(context).colorScheme.secondaryContainer;
-      Color onPrimaryButtonColor = appStateSettings["materialYou"] ||
+      Color onPrimaryButtonColor = appStateSettings["materialYou"] == true ||
               Theme.of(context).brightness == Brightness.light
           ? dynamicPastel(
               context,
@@ -94,9 +94,9 @@ Future<T?> openPopup<T extends Object?>(
               amount: 0.25,
             )
           : Theme.of(context).colorScheme.onSecondaryContainer;
-      return WillPopScope(
+      return PopScope(
         //Stop back button
-        onWillPop: () async => barrierDismissible,
+        canPop: barrierDismissible,
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: getWidthBottomSheet(context)),
@@ -377,9 +377,9 @@ Future<T?> openPopupCustom<T extends Object?>(
     },
     transitionDuration: Duration(milliseconds: 200),
     pageBuilder: (_, __, ___) {
-      return WillPopScope(
+      return PopScope(
         //Stop back button
-        onWillPop: () async => barrierDismissible,
+        canPop: barrierDismissible,
         child: Center(
           child: Container(
             margin: EdgeInsetsDirectional.only(
@@ -453,9 +453,9 @@ Future<T?> openLoadingPopup<T extends Object?>(BuildContext context) {
     },
     transitionDuration: Duration(milliseconds: 200),
     pageBuilder: (_, __, ___) {
-      return WillPopScope(
+      return PopScope(
         //Stop back button
-        onWillPop: () async => false,
+        canPop: false,
         child: Center(
           child: Container(
             padding:

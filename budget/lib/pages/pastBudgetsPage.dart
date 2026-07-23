@@ -575,7 +575,7 @@ class __PastBudgetsPageContentState extends State<_PastBudgetsPageContent> {
           sliver: MultiSliver(
             children: [
               SliverToBoxAdapter(
-                child: appStateSettings["sharedBudgets"]
+                child: appStateSettings["sharedBudgets"] == true
                     ? BudgetSpenderSummary(
                         budget: widget.budget,
                         budgetRange: budgetRange,

@@ -97,7 +97,7 @@ class CategoryIcon extends StatelessWidget {
                 color: noBackground && category != null
                     ? Colors.transparent
                     : category != null
-                        ? appStateSettings["colorTintCategoryIcon"] &&
+                        ? appStateSettings["colorTintCategoryIcon"] == true &&
                                 tintEnabled
                             ? dynamicPastel(
                                 context,
@@ -133,7 +133,7 @@ class CategoryIcon extends StatelessWidget {
                   child: (category?.emojiIconName == null &&
                           category != null &&
                           category.iconName != null
-                      ? !appStateSettings["colorTintCategoryIcon"] ||
+                      ? appStateSettings["colorTintCategoryIcon"] != true ||
                               !tintEnabled
                           ? CacheCategoryIcon(
                               iconName: category.iconName ?? "",
@@ -248,6 +248,7 @@ class _CacheCategoryIconState extends State<CacheCategoryIcon> {
 
   @override
   void didUpdateWidget(covariant CacheCategoryIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.iconName != oldWidget.iconName ||
         widget.size != oldWidget.size) {
       setState(() {

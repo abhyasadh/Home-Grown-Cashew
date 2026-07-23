@@ -22,11 +22,11 @@ Future<TimeOfDay?> showCustomTimePicker(
           materialLocalizations: MaterialLocalizations.of(context),
           child: child ?? SizedBox.shrink());
 
-      if (appStateSettings["materialYou"]) {
+      if (appStateSettings["materialYou"] == true) {
         return Theme(
           data: Theme.of(context).copyWith(
             // ignore: deprecated_member_use
-            useMaterial3: appStateSettings["materialYou"],
+            useMaterial3: appStateSettings["materialYou"] == true,
             colorScheme: Theme.of(context).colorScheme.copyWith(
                   tertiaryContainer:
                       Theme.of(context).colorScheme.primaryContainer,

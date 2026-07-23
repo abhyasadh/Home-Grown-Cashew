@@ -183,8 +183,8 @@ class _AddEmailTemplateState extends State<AddEmailTemplate> {
               padding: const EdgeInsetsDirectional.all(15),
               child: SelectableText(
                 messageString,
-                toolbarOptions: ToolbarOptions(
-                    copy: false, cut: false, paste: false, selectAll: false),
+                contextMenuBuilder: (context, editableTextState) =>
+                    SizedBox.shrink(),
                 onSelectionChanged: (selection, changeCause) {
                   selectedSubject = messageString.substring(
                       selection.baseOffset, selection.extentOffset);
@@ -240,8 +240,8 @@ class _AddEmailTemplateState extends State<AddEmailTemplate> {
               padding: const EdgeInsetsDirectional.all(15),
               child: SelectableText(
                 messageString,
-                toolbarOptions: ToolbarOptions(
-                    copy: false, cut: false, paste: false, selectAll: false),
+                contextMenuBuilder: (context, editableTextState) =>
+                    SizedBox.shrink(),
                 onSelectionChanged: (selection, changeCause) {
                   if (selection.baseOffset - characterPadding < 0) {
                     amountTransactionBefore =
@@ -314,8 +314,8 @@ class _AddEmailTemplateState extends State<AddEmailTemplate> {
               padding: const EdgeInsetsDirectional.all(15),
               child: SelectableText(
                 messageString,
-                toolbarOptions: ToolbarOptions(
-                    copy: false, cut: false, paste: false, selectAll: false),
+                contextMenuBuilder: (context, editableTextState) =>
+                    SizedBox.shrink(),
                 onSelectionChanged: (selection, changeCause) {
                   if (selection.baseOffset - characterPadding < 0) {
                     titleTransactionBefore =
@@ -391,8 +391,10 @@ class _AddEmailTemplateState extends State<AddEmailTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
         if (widget.scannerTemplate != null) {
           discardChangesPopup(
             context,
@@ -400,9 +402,11 @@ class _AddEmailTemplateState extends State<AddEmailTemplate> {
             currentObject: createTemplate(),
           );
         } else {
-          discardChangesPopup(context);
+          discardChangesPopup(
+            context,
+            currentObject: createTemplate(),
+          );
         }
-        return false;
       },
       child: PageFramework(
         staticOverlay: Align(

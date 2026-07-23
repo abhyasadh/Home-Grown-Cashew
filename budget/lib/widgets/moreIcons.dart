@@ -13,18 +13,12 @@ class MoreIcons {
       IconData(0xf09b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money_bill =
       IconData(0xf0d6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData google =
-      IconData(0xf1a0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData chart_area =
       IconData(0xf1fe, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData chart_pie =
       IconData(0xf200, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData chart_line =
       IconData(0xf201, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData google_drive =
-      IconData(0xf3aa, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData google_play =
-      IconData(0xf3ab, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money_bill_alt =
       IconData(0xf3d1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData money_bill_wave =

@@ -27,7 +27,7 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       vsync: this,
     );
 
-    if (!appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] != true) {
       _controller.forward();
     }
 
@@ -42,7 +42,7 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] == true) {
       return widget.child;
     }
     return AnimatedBuilder(
@@ -96,7 +96,7 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
       CurvedAnimation(parent: _controller, curve: widget.curve),
     );
 
-    if (!appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] != true) {
       Future.delayed(widget.delay, () {
         if (mounted) {
           // Check if the widget is still mounted
@@ -127,7 +127,7 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] == true) {
       return widget.child;
     }
     return AnimatedBuilder(
@@ -298,7 +298,7 @@ class _SlideFadeTransitionState extends State<SlideFadeTransition>
       vsync: this,
       duration: widget.animationDuration,
     );
-    if (!appStateSettings["batterySaver"]) {
+    if (appStateSettings["batterySaver"] != true) {
       if (widget.reverse == true) {}
 
       if (widget.direction == Direction.vertical) {
@@ -341,7 +341,7 @@ class _SlideFadeTransitionState extends State<SlideFadeTransition>
 
   @override
   Widget build(BuildContext context) {
-    if (appStateSettings["batterySaver"] || widget.animate == false) {
+    if (appStateSettings["batterySaver"] == true || widget.animate == false) {
       return widget.child;
     }
     return FadeTransition(
@@ -419,11 +419,10 @@ class ShakeAnimation extends StatefulWidget {
 
 class _ShakeAnimationState extends State<ShakeAnimation> {
   bool startAnimation = false;
-  Future? _future;
 
   @override
   void initState() {
-    _future = Future.delayed(widget.delay, () {
+    Future.delayed(widget.delay, () {
       if (mounted)
         setState(() {
           startAnimation = true;
@@ -448,7 +447,6 @@ class _ShakeAnimationState extends State<ShakeAnimation> {
 
   @override
   void dispose() {
-    _future = null;
     super.dispose();
   }
 

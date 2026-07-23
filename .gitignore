@@ -1,2 +1,85 @@
-# Miscellaneous
 /.vscode/
+/.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+
+# Server data
+/data/
+server/data/
+
+# Build outputs
+/build/
+*/build/
+*.apk
+*.aab
+*.ipa
+*.appbundle
+*.dmg
+*.exe
+server/cashew-server
+
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/packages/*/build/
+/packages/*/.dart_tool/
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release
+/android/key.properties
+/android/local.properties
+/android/.gradle/
+
+# iOS
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/ephemeral/
+/ios/Flutter/flutter_export_environment.sh
+
+# Web
+budget/web/drift_worker.dart
+budget/web/drift_worker.dart.js
+budget/web/drift_worker.dart.js.deps
+budget/web/drift_worker.dart.js.map
+budget/web/sqlite3.wasm
+
+# Generated package files
+budget/packages/*/.gradle/
+budget/packages/*/android/.gradle/
+budget/packages/*/android/gradle/wrapper/gradle-wrapper.jar
+budget/packages/*/android/gradlew
+budget/packages/*/android/gradlew.bat
+budget/packages/*/android/gradlew
+budget/packages/*/android/gradlew.bat
+budget/packages/*/example/android/.gradle/
+budget/packages/*/example/android/app/src/main/java/io/
+budget/packages/*/example/ios/Flutter/Generated.xcconfig
+budget/packages/*/example/ios/Flutter/ephemeral/
+budget/packages/*/example/ios/Flutter/flutter_export_environment.sh
+budget/packages/*/example/ios/Runner/GeneratedPluginRegistrant.h
+budget/packages/*/example/ios/Runner/GeneratedPluginRegistrant.m
+
+# Firebase (legacy)
+.firebase/
+firebase-debug.log
+.firebaserc
+firebase.json
+
+# Misc
+node_modules/
+coverage/

@@ -54,14 +54,13 @@ class SubscriptionsPageState extends State<SubscriptionsPage> {
   Widget build(BuildContext context) {
     String pageId = "Subscriptions";
 
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[pageId] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[pageId] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[pageId] ?? []).isNotEmpty) {
           globalSelectedID.value[pageId] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: PageFramework(
@@ -415,7 +414,7 @@ class TotalUpcomingHeaderPeriodSwitcher extends StatelessWidget {
                     color: selectedType != SelectedSubscriptionsType.monthly
                         ? dynamicPastel(context,
                             Theme.of(context).colorScheme.secondaryContainer,
-                            amount: appStateSettings["materialYou"] ? 0.2 : 0.7)
+                            amount: appStateSettings["materialYou"] == true ? 0.2 : 0.7)
                         : null,
                     textColor: selectedType != SelectedSubscriptionsType.monthly
                         ? getColor(context, "black").withValues(alpha: 0.5)
@@ -441,7 +440,7 @@ class TotalUpcomingHeaderPeriodSwitcher extends StatelessWidget {
                     color: selectedType != SelectedSubscriptionsType.yearly
                         ? dynamicPastel(context,
                             Theme.of(context).colorScheme.secondaryContainer,
-                            amount: appStateSettings["materialYou"] ? 0.2 : 0.7)
+                            amount: appStateSettings["materialYou"] == true ? 0.2 : 0.7)
                         : null,
                     textColor: selectedType != SelectedSubscriptionsType.yearly
                         ? getColor(context, "black").withValues(alpha: 0.5)
@@ -467,7 +466,7 @@ class TotalUpcomingHeaderPeriodSwitcher extends StatelessWidget {
                     color: selectedType != SelectedSubscriptionsType.total
                         ? dynamicPastel(context,
                             Theme.of(context).colorScheme.secondaryContainer,
-                            amount: appStateSettings["materialYou"] ? 0.2 : 0.7)
+                            amount: appStateSettings["materialYou"] == true ? 0.2 : 0.7)
                         : null,
                     textColor: selectedType != SelectedSubscriptionsType.total
                         ? getColor(context, "black").withValues(alpha: 0.5)

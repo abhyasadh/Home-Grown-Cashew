@@ -27,11 +27,15 @@ import 'package:budget/widgets/transactionEntry/transactionEntryAmount.dart';
 import 'package:budget/widgets/transactionEntry/transactionEntryNote.dart';
 import 'package:budget/widgets/transactionEntry/transactionEntryTag.dart';
 
-ValueNotifier<Map<String, List<String>>> globalSelectedID =
-    ValueNotifier<Map<String, List<String>>>({});
+class GlobalSelectedIDNotifier extends ValueNotifier<Map<String, List<String>>> {
+  GlobalSelectedIDNotifier() : super({});
 
-ValueNotifier<Map<String, bool>> globalCollapsedFutureID =
-    ValueNotifier<Map<String, bool>>({});
+  void notify() {
+    notifyListeners();
+  }
+}
+
+GlobalSelectedIDNotifier globalSelectedID = GlobalSelectedIDNotifier();
 
 int maxSelectableTransactionsListedOnPage = 1000;
 Map<String, List<String>> globalTransactionsListedOnPageID = {};
@@ -50,17 +54,38 @@ class RecentlyAddedTransactionInfo {
   void triggerAnimation() {
     shouldAnimate = false;
     isRunningAnimation = true;
-    recentlyAddedTransactionInfo.notifyListeners();
+    recentlyAddedTransactionInfo.notify();
     Future.delayed(Duration(milliseconds: 100), () {
       isRunningAnimation = false;
-      recentlyAddedTransactionInfo.notifyListeners();
+      recentlyAddedTransactionInfo.notify();
     });
   }
 }
 
-ValueNotifier<RecentlyAddedTransactionInfo> recentlyAddedTransactionInfo =
-    ValueNotifier<RecentlyAddedTransactionInfo>(
+class RecentlyAddedTransactionInfoNotifier
+    extends ValueNotifier<RecentlyAddedTransactionInfo> {
+  RecentlyAddedTransactionInfoNotifier(RecentlyAddedTransactionInfo value)
+      : super(value);
+
+  void notify() {
+    notifyListeners();
+  }
+}
+
+RecentlyAddedTransactionInfoNotifier recentlyAddedTransactionInfo =
+    RecentlyAddedTransactionInfoNotifier(
         RecentlyAddedTransactionInfo(null, false));
+
+class GlobalCollapsedFutureIDNotifier extends ValueNotifier<Map<String, bool>> {
+  GlobalCollapsedFutureIDNotifier() : super({});
+
+  void notify() {
+    notifyListeners();
+  }
+}
+
+GlobalCollapsedFutureIDNotifier globalCollapsedFutureID =
+    GlobalCollapsedFutureIDNotifier();
 
 class TransactionEntryHitBox extends RenderProxyBox {
   String? transactionKey;
@@ -148,7 +173,7 @@ class TransactionEntry extends StatelessWidget {
       globalSelectedID.value[listID ?? "0"]!.remove(transaction.transactionPk);
       if (isSwiping) selectingTransactionsActive = -1;
     }
-    globalSelectedID.notifyListeners();
+    globalSelectedID.notify();
 
     if (onSelected != null) onSelected!(transaction, selected);
   }
@@ -800,7 +825,7 @@ class CollapseFutureTransactions extends StatelessWidget {
 void toggleFutureTransactionsSection(String? listID) {
   globalCollapsedFutureID.value[listID ?? "0"] =
       !(globalCollapsedFutureID.value[listID ?? "0"] ?? false);
-  globalCollapsedFutureID.notifyListeners();
+  globalCollapsedFutureID.notify();
   sharedPreferences.setString(
       "globalCollapsedFutureID", jsonEncode(globalCollapsedFutureID.value));
 }
@@ -809,7 +834,7 @@ void flashTransaction(String transactionPk, {int flashCount = 5}) {
   recentlyAddedTransactionInfo.value.shouldAnimate = true;
   recentlyAddedTransactionInfo.value.transactionPk = transactionPk;
   recentlyAddedTransactionInfo.value.loopCount = flashCount;
-  recentlyAddedTransactionInfo.notifyListeners();
+  recentlyAddedTransactionInfo.notify();
 }
 
 class FlashingContainer extends StatefulWidget {

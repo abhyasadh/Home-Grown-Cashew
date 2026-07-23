@@ -44,7 +44,7 @@ class NoResults extends StatelessWidget {
                   child: appStateSettings["materialYou"]
                       ? ColorFiltered(
                           colorFilter: ColorFilter.mode(
-                            !appStateSettings["materialYou"]
+                            appStateSettings["materialYou"] != true
                                 ? getColor(context, "black").withValues(alpha: 0.1)
                                 : tintColor == null
                                     ? Theme.of(context)

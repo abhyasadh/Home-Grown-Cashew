@@ -1,0 +1,16 @@
+services:
+  cashew-server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: cashew-server
+    restart: unless-stopped
+    ports:
+      - "${PORT:-2580}:2580"
+    volumes:
+      - "${DATA_DIR:-./data}:/app/data"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - DATA_DIR=/app/data
+      - WEB_DIR=/app/web/build
+      - PORT=2580

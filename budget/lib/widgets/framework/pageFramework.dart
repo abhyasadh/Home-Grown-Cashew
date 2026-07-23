@@ -334,7 +334,6 @@ class PageFrameworkState extends State<PageFramework>
 
         if (totalDragX > 20) {
           isSwipingToDismissPageDown.value = true;
-          isSwipingToDismissPageDown.notifyListeners();
         }
       }
       if (swipeDownToDismiss && widget.dragDownToDismissEnabled) {
@@ -350,7 +349,6 @@ class PageFrameworkState extends State<PageFramework>
 
         if (totalDragY > 20) {
           isSwipingToDismissPageDown.value = true;
-          isSwipingToDismissPageDown.notifyListeners();
         }
       }
       _animationControllerDragY.value =
@@ -384,7 +382,6 @@ class PageFrameworkState extends State<PageFramework>
       isBackSideSwiping = false;
       _animationControllerDragY.reverse();
       isSwipingToDismissPageDown.value = false;
-      isSwipingToDismissPageDown.notifyListeners();
     }
   }
 
@@ -1107,7 +1104,7 @@ List<Widget> getAppBarBackgroundColorLayers({
                     ? dynamicPastel(
                         context,
                         Theme.of(context).colorScheme.secondaryContainer,
-                        amount: appStateSettings["materialYou"] ? 0.4 : 0.55,
+                        amount: appStateSettings["materialYou"] == true ? 0.4 : 0.55,
                       )
                     : appBarBackgroundColor,
               );
@@ -1193,7 +1190,7 @@ List<Widget> getAppBarBackgroundColorLayers({
                         ? dynamicPastel(context,
                             Theme.of(context).colorScheme.secondaryContainer,
                             amount:
-                                appStateSettings["materialYou"] ? 0.4 : 0.55)
+                                appStateSettings["materialYou"] == true ? 0.4 : 0.55)
                         : appBarBackgroundColor,
                     inverse: true,
                     amount: 0.05,

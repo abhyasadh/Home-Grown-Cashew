@@ -78,14 +78,15 @@ class _ButtonState extends State<Button> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Color effectiveTextColor = widget.textColor ??
+        (appStateSettings["materialYou"]
+            ? dynamicPastel(context, Theme.of(context).colorScheme.onPrimary,
+                amount: 0.2)
+            : Theme.of(context).colorScheme.onSecondaryContainer);
     Widget text = TextFont(
       text: widget.label,
       fontSize: widget.fontSize,
-      textColor: widget.textColor ??
-          (appStateSettings["materialYou"]
-              ? dynamicPastel(context, Theme.of(context).colorScheme.onPrimary,
-                  amount: 0.2)
-              : Theme.of(context).colorScheme.onSecondaryContainer),
+      textColor: effectiveTextColor,
       maxLines: 5,
       textAlign: widget.icon != null ? TextAlign.start : TextAlign.center,
     );
@@ -153,11 +154,7 @@ class _ButtonState extends State<Button> with TickerProviderStateMixin {
                         child: Icon(
                           widget.icon,
                           size: 21,
-                          color: widget.iconColor == null
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryContainer
-                              : widget.iconColor,
+                          color: widget.iconColor ?? effectiveTextColor,
                         ),
                       ),
                     widget.flexibleLayout

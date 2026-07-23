@@ -5,7 +5,6 @@ import 'package:budget/pages/exchangeRatesPage.dart';
 import 'package:budget/struct/defaultPreferences.dart';
 import 'package:budget/struct/navBarIconsData.dart';
 import 'package:budget/struct/settings.dart';
-import 'package:budget/widgets/accountAndBackup.dart';
 import 'package:budget/widgets/animatedExpanded.dart';
 import 'package:budget/widgets/navigationFramework.dart';
 import 'package:budget/widgets/openBottomSheet.dart';
@@ -108,7 +107,7 @@ class NavigationSidebarState extends State<NavigationSidebar> {
             color: Theme.of(context).colorScheme.surface,
             border: BorderDirectional(
               end: BorderSide(
-                color: appStateSettings["materialYou"]
+                color: appStateSettings["materialYou"] == true
                     ? dynamicPastel(context,
                         Theme.of(context).colorScheme.secondaryContainer,
                         amountLight: 0, amountDark: 0.6)
@@ -155,15 +154,18 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                   curve: Curves.easeInOutCubicEmphasized,
                                   padding: EdgeInsetsDirectional.only(
                                     bottom: appStateSettings[
-                                            "expandedNavigationSidebar"]
+                                                "expandedNavigationSidebar"] ==
+                                            true
                                         ? 0
                                         : 5,
                                     top: appStateSettings[
-                                            "expandedNavigationSidebar"]
+                                                "expandedNavigationSidebar"] ==
+                                            true
                                         ? 0
                                         : 7,
                                     start: appStateSettings[
-                                            "expandedNavigationSidebar"]
+                                                "expandedNavigationSidebar"] ==
+                                            true
                                         ? 0
                                         : 7,
                                   ),
@@ -174,7 +176,8 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                             ? Duration.zero
                                             : Duration(milliseconds: 1500),
                                     turns: appStateSettings[
-                                            "expandedNavigationSidebar"]
+                                                "expandedNavigationSidebar"] ==
+                                            true
                                         ? 0
                                         : -0.5,
                                     curve: Curves.easeInOutCubicEmphasized,
@@ -183,12 +186,12 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                       onPressed: () {
                                         updateSettings(
                                             "expandedNavigationSidebar",
-                                            !appStateSettings[
-                                                "expandedNavigationSidebar"],
+                                            appStateSettings["expandedNavigationSidebar"] !=
+                                                true,
                                             updateGlobalState: true);
                                       },
                                       icon: Icon(
-                                        appStateSettings["outlinedIcons"]
+                                        appStateSettings["outlinedIcons"] == true
                                             ? Icons.chevron_left_outlined
                                             : Icons.chevron_left_rounded,
                                       ),
@@ -229,11 +232,13 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                               Curves.easeInOutCubicEmphasized,
                                           padding: EdgeInsetsDirectional.only(
                                             top: appStateSettings[
-                                                    "expandedNavigationSidebar"]
+                                                        "expandedNavigationSidebar"] ==
+                                                    true
                                                 ? 12
                                                 : 0,
                                             bottom: appStateSettings[
-                                                    "expandedNavigationSidebar"]
+                                                        "expandedNavigationSidebar"] ==
+                                                    true
                                                 ? 18
                                                 : 0,
                                           ),
@@ -251,7 +256,8 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                     : Duration(milliseconds: 1500),
                                 curve: Curves.easeInOutCubicEmphasized,
                                 height: appStateSettings[
-                                        "expandedNavigationSidebar"]
+                                            "expandedNavigationSidebar"] ==
+                                        true
                                     ? 40
                                     : 0,
                               ),
@@ -302,10 +308,6 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(height: 40),
-                              GoogleAccountLoginButton(
-                                navigationSidebarButton: true,
-                                isButtonSelected: selectedIndex == 8,
-                              ),
                               NavigationSidebarButtonWithNavBarIconData(
                                 navBarIconDataKey: "settings",
                                 currentPageIndex: selectedIndex,
@@ -340,7 +342,7 @@ class SidebarClock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appStateSettings["expandedNavigationSidebar"]
+    return appStateSettings["expandedNavigationSidebar"] == true
         ? Center(
             key: ValueKey(appStateSettings["expandedNavigationSidebar"]),
             child: MediaQuery(
@@ -453,7 +455,7 @@ class _SyncButtonState extends State<SyncButton> {
       child: RefreshButton(
         key: refreshButtonKey,
         halfAnimation: true,
-        customIcon: appStateSettings["outlinedIcons"]
+        customIcon: appStateSettings["outlinedIcons"] == true
             ? Icons.sync_outlined
             : Icons.sync_rounded,
         flipIcon: true,
@@ -488,7 +490,7 @@ class _SyncButtonState extends State<SyncButton> {
             }
           },
           // Do not use Animated Switcher because otherwise duplicate key!
-          child: appStateSettings["expandedNavigationSidebar"]
+          child: appStateSettings["expandedNavigationSidebar"] == true
               ? Padding(
                   key: ValueKey(appStateSettings["expandedNavigationSidebar"]),
                   padding: const EdgeInsetsDirectional.symmetric(
@@ -652,7 +654,7 @@ class NavigationSidebarButton extends StatelessWidget {
             }
             onTap();
           },
-          child: AnimatedSizeSwitcher(
+            child: AnimatedSizeSwitcher(
             sizeDuration:
                 appStateSettings["appAnimations"] != AppAnimations.all.index
                     ? Duration.zero
@@ -661,7 +663,7 @@ class NavigationSidebarButton extends StatelessWidget {
                 appStateSettings["appAnimations"] != AppAnimations.all.index
                     ? Duration.zero
                     : Duration(milliseconds: 250),
-            child: appStateSettings["expandedNavigationSidebar"]
+            child: appStateSettings["expandedNavigationSidebar"] == true
                 ? Padding(
                     key:
                         ValueKey(appStateSettings["expandedNavigationSidebar"]),
@@ -736,7 +738,7 @@ class _EdiDatatButtonsState extends State<EditDataButtons> {
             curve: Curves.easeInOutCubicEmphasized,
             turns: showEditDataButtons ? 0 : -0.5,
             child: Icon(
-              appStateSettings["outlinedIcons"]
+              appStateSettings["outlinedIcons"] == true
                   ? Icons.arrow_drop_up_outlined
                   : Icons.arrow_drop_up_rounded,
             ),
@@ -748,7 +750,7 @@ class _EdiDatatButtonsState extends State<EditDataButtons> {
               : Duration(milliseconds: 1500),
           curve: Curves.easeInOutCubicEmphasized,
           padding: EdgeInsetsDirectional.only(
-              start: appStateSettings["expandedNavigationSidebar"] ? 8 : 0),
+              start: appStateSettings["expandedNavigationSidebar"] == true ? 8 : 0),
           child: AnimatedSizeSwitcher(
             sizeDuration:
                 appStateSettings["appAnimations"] != AppAnimations.all.index

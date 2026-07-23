@@ -52,15 +52,14 @@ class _EditCategoriesPageState extends State<EditCategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: searchValue == "",
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         if (searchValue != "") {
           setState(() {
             searchValue = "";
           });
-          return false;
-        } else {
-          return true;
         }
       },
       child: PageFramework(

@@ -327,8 +327,7 @@ class _EditHomePageState extends State<EditHomePage> {
                         }
                         updateSettings(
                           "lineGraphStartDate",
-                          (picked ?? appStateSettings["lineGraphDisplayType"])
-                              .toString(),
+                          picked.toString(),
                           pagesNeedingRefresh: [],
                           updateGlobalState: false,
                         );
@@ -421,11 +420,11 @@ class _EditHomePageState extends State<EditHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
         // We need to refresh the home page when this route is popped
         homePageStateKey.currentState?.refreshState();
-        return true;
       },
       child: PageFramework(
         horizontalPaddingConstrained: true,
@@ -1026,13 +1025,9 @@ void switchHomeScreenSection(
 
 bool isHomeScreenSectionEnabled(BuildContext context, String sectionSetting) {
   if (enableDoubleColumn(context)) {
-    if (appStateSettings[sectionSetting + "FullScreen"] != null)
-      return appStateSettings[sectionSetting + "FullScreen"];
-    return false;
+    return appStateSettings[sectionSetting + "FullScreen"] == true;
   } else {
-    if (appStateSettings[sectionSetting] != null)
-      return appStateSettings[sectionSetting];
-    return false;
+    return appStateSettings[sectionSetting] == true;
   }
 }
 

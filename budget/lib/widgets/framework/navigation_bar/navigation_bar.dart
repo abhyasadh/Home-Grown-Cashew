@@ -4,8 +4,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart' show clampDouble;
-
 import 'package:flutter/material.dart';
 
 const double _kIndicatorHeight = 32;
@@ -24,7 +22,7 @@ const double _kIndicatorWidth = 64;
 ///
 /// This widget does not adjust its size with the [ThemeData.visualDensity].
 ///
-/// The [MediaQueryData.textScaleFactor] does not adjust the size of this widget but
+/// The [MediaQueryData.textScaler] does not adjust the size of this widget but
 /// rather the size of the [Tooltip]s displayed on long presses of the
 /// destinations.
 ///
@@ -174,7 +172,7 @@ class NavigationBar extends StatelessWidget {
   /// automatically.
   ///
   /// The height does not adjust with [ThemeData.visualDensity] or
-  /// [MediaQueryData.textScaleFactor] as this component loses usability at
+  /// [MediaQueryData.textScaler] as this component loses usability at
   /// larger and smaller sizes due to the truncating of labels or smaller tap
   /// targets.
   ///
@@ -1059,11 +1057,10 @@ class _ClampTextScaleFactor extends StatelessWidget {
   Widget build(BuildContext context) {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
-        textScaler: TextScaler.linear(clampDouble(
-          MediaQuery.textScaleFactorOf(context),
-          0.0,
-          upperLimit,
-        )),
+        textScaler: MediaQuery.textScalerOf(context).clamp(
+          minScaleFactor: 0.0,
+          maxScaleFactor: upperLimit,
+        ),
       ),
       child: child,
     );

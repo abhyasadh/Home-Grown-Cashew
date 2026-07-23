@@ -1,7 +1,6 @@
 import 'package:budget/colors.dart';
 import 'package:budget/functions.dart';
 import 'package:budget/struct/settings.dart';
-import 'package:budget/widgets/accountAndBackup.dart';
 import 'package:budget/widgets/navigationFramework.dart';
 import 'package:budget/widgets/navigationSidebar.dart';
 import 'package:budget/widgets/transactionEntry/swipeToSelectTransactions.dart';
@@ -15,8 +14,7 @@ bool enableSwipeDownToRefresh(BuildContext context) {
   return selectingTransactionsActive == 0 &&
       runningCloudFunctions == false &&
       appStateSettings["hasSignedIn"] != false &&
-      appStateSettings["backupSync"] == true &&
-      googleUser != null;
+      appStateSettings["backupSync"] == true;
   // && getIsFullScreen(context) == false;
 }
 

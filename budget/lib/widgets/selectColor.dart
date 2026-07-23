@@ -50,7 +50,7 @@ class SelectColor extends StatefulWidget {
 class _SelectColorState extends State<SelectColor> {
   Color? selectedColor;
   int? selectedIndex;
-  bool useSystemColor = appStateSettings["accentSystemColor"];
+  bool useSystemColor = appStateSettings["accentSystemColor"] ?? false;
   List<Color> selectableColorsList = [];
 
   @override

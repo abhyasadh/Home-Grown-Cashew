@@ -90,6 +90,7 @@ class TextInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final double? fontSize;
   final FontWeight fontWeight;
+  final double? startContentPadding;
   final double? topContentPadding;
   final TextCapitalization? textCapitalization;
   final BorderRadius? borderRadius;
@@ -99,6 +100,7 @@ class TextInput extends StatelessWidget {
   final bool autocorrect;
   final int? maxLength;
   final bool handleOnTapOutside;
+  final String? hintText;
 
   const TextInput({
     Key? key,
@@ -128,6 +130,7 @@ class TextInput extends StatelessWidget {
     this.keyboardType,
     this.fontSize,
     this.fontWeight = FontWeight.normal,
+    this.startContentPadding,
     this.topContentPadding,
     this.textCapitalization,
     this.borderRadius,
@@ -137,6 +140,7 @@ class TextInput extends StatelessWidget {
     this.autocorrect = true,
     this.maxLength,
     this.handleOnTapOutside = true,
+    this.hintText,
   }) : super(key: key);
 
   @override
@@ -174,7 +178,7 @@ class TextInput extends StatelessWidget {
               textAlignVertical: kIsWeb ? TextAlignVertical.bottom : null,
               //incognito keyboard
               enableIMEPersonalizedLearning:
-                  !appStateSettings["incognitoKeyboard"],
+                  appStateSettings["incognitoKeyboard"] != true,
               scrollPadding: EdgeInsets.only(bottom: 80),
               focusNode: focusNode,
               keyboardType: keyboardType != null
@@ -215,7 +219,7 @@ class TextInput extends StatelessWidget {
                 prefix: prefix != null ? TextFont(text: prefix ?? "") : null,
                 suffix: suffix != null ? TextFont(text: suffix ?? "") : null,
                 contentPadding: EdgeInsetsDirectional.only(
-                  start: bubbly == false ? (kIsWeb ? 8 + 5 : 8) : 18,
+                  start: startContentPadding ?? (bubbly == false ? (kIsWeb ? 8 + 5 : 8) : 18),
                   end: (kIsWeb ? paddingRight + 5 : paddingRight),
                   top: topContentPadding != null
                       ? topContentPadding ?? 0
@@ -223,7 +227,8 @@ class TextInput extends StatelessWidget {
                   bottom:
                       bubbly == false ? (kIsWeb ? 8 : 5) : (kIsWeb ? 15 : 0),
                 ),
-                hintText: labelText,
+                hintText: hintText ?? labelText,
+                labelText: hintText != null ? labelText : null,
                 filled: bubbly == false ? true : false,
                 fillColor: Colors.transparent,
                 isDense: true,

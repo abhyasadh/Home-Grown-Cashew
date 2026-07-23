@@ -174,10 +174,8 @@ class _AddCategoryPageState extends State<AddCategoryPage>
   }
 
   Future<TransactionCategory> createTransactionCategory() async {
-    TransactionCategory? currentInstance;
     if (widget.category != null) {
-      currentInstance =
-          await database.getCategoryInstance(widget.category!.categoryPk);
+      await database.getCategoryInstance(widget.category!.categoryPk);
     }
     return TransactionCategory(
       categoryPk: widget.category != null ? widget.category!.categoryPk : "-1",
@@ -357,16 +355,19 @@ class _AddCategoryPageState extends State<AddCategoryPage>
         ],
       ),
     );
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.category != null) {
-          discardChangesPopup(context,
-              previousObject: widget.category!,
-              currentObject: await createTransactionCategory());
-        } else {
-          showDiscardChangesPopupIfNotEditing();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (widget.category != null) {
+            createTransactionCategory().then((category) {
+              discardChangesPopup(context,
+                  previousObject: widget.category!, currentObject: category);
+            });
+          } else {
+            showDiscardChangesPopupIfNotEditing();
+          }
         }
-        return false;
       },
       child: PageFramework(
         dragDownToDismissEnabled: dragDownToDismissEnabled,
@@ -1190,8 +1191,8 @@ class AssociatedTitleContainer extends StatelessWidget {
 //             ButtonIcon(
 //               onTap: onTap,
 //               icon: selectedIncome
-//                   ? appStateSettings["outlinedIcons"] ? Icons.exit_to_app_outlined : Icons.exit_to_app_rounded
-//                   : appStateSettings["outlinedIcons"] ? Icons.logout_outlined : Icons.logout_rounded,
+//                   ? appStateSettings["outlinedIcons"] == true ? Icons.exit_to_app_outlined : Icons.exit_to_app_rounded
+//                   : appStateSettings["outlinedIcons"] == true ? Icons.logout_outlined : Icons.logout_rounded,
 //               size: 41,
 //             ),
 //             SizedBox(width: 15),

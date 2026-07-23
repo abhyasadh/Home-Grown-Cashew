@@ -10,7 +10,7 @@ import 'package:budget/pages/sharedBudgetSettings.dart';
 import 'package:budget/struct/currencyFunctions.dart';
 import 'package:budget/struct/databaseGlobal.dart';
 import 'package:budget/struct/settings.dart';
-import 'package:budget/struct/shareBudget.dart';
+import 'package:budget/struct/shareBudget.dart' hide getMemberNickname;
 import 'package:budget/widgets/dropdownSelect.dart';
 import 'package:budget/widgets/globalSnackbar.dart';
 import 'package:budget/widgets/incomeExpenseTabSelector.dart';
@@ -361,7 +361,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
       if (widget.budget == null) {
         bool result = await premiumPopupBudgets(context);
         if (result == true && widget.isAddedOnlyBudget != true) {
-          dynamic result = await openBottomSheet(
+          await openBottomSheet(
             context,
             fullSnap: false,
             SelectBudgetTypePopup(setBudgetType: setSelectedBudgetType),
@@ -378,7 +378,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
           //     ),
           //   );
           // }
-          dynamic result2 = await openBottomSheet(
+          await openBottomSheet(
             context,
             fullSnap: false,
             SelectBudgetIncomeTypePopup(setBudgetIncome: setSelectedIncome),
@@ -578,14 +578,16 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
         : budgetAmountToPrimaryCurrency(
             Provider.of<AllWallets>(context, listen: true), widget.budget!);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.budget != null) {
-          discardChangesPopupIfBudgetPassed();
-        } else {
-          showDiscardChangesPopupIfNotEditing();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (widget.budget != null) {
+            discardChangesPopupIfBudgetPassed();
+          } else {
+            showDiscardChangesPopupIfNotEditing();
+          }
         }
-        return false;
       },
       child: PageFramework(
         resizeToAvoidBottomInset: true,
@@ -923,7 +925,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                         items: <String>[
                           "Added Only",
                           "All Transactions",
-                          ...(appStateSettings["sharedBudgets"]
+                          ...(appStateSettings["sharedBudgets"] == true
                               ? ["Shared Group Budget"]
                               : [])
                         ],
@@ -1004,7 +1006,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                               BudgetTransactionFilters.includeDebtAndCredit,
                               BudgetTransactionFilters.addedToOtherBudget,
                               BudgetTransactionFilters.addedToObjective,
-                              ...(appStateSettings["sharedBudgets"]
+                              ...(appStateSettings["sharedBudgets"] == true
                                   ? [
                                       BudgetTransactionFilters
                                           .sharedToOtherBudget

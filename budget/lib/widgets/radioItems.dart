@@ -48,9 +48,7 @@ class _RadioItemsState<T> extends State<RadioItems<T>> {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [];
-    int index = -1;
     for (T item in widget.items) {
-      index += 1;
       bool selected = false;
       if (currentValue == item ||
           (widget.getSelected != null && widget.getSelected!(item)))
@@ -138,18 +136,11 @@ class _RadioItemsState<T> extends State<RadioItems<T>> {
                 ),
               ),
               dense: true,
-              leading: Radio<String>(
+              leading: Radio<T>(
                 visualDensity: VisualDensity.compact,
-                value: selected ? "true" : "false",
-                groupValue: "true",
-                onChanged: (_) {
-                  setState(() {
-                    currentValue = item;
-                  });
-                  widget.onChanged(item);
-                },
+                value: item,
                 fillColor: widget.colorFilter != null &&
-                        widget.colorFilter!(item) != null
+                    widget.colorFilter!(item) != null
                     ? WidgetStateColor.resolveWith(
                         (states) => widget.colorFilter!(item)!)
                     : null,
@@ -160,8 +151,19 @@ class _RadioItemsState<T> extends State<RadioItems<T>> {
         ),
       );
     }
-    return Column(
-      children: children,
+    return RadioGroup<T>(
+      groupValue: currentValue,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            currentValue = value;
+          });
+          widget.onChanged(value);
+        }
+      },
+      child: Column(
+        children: children,
+      ),
     );
   }
 }
@@ -219,7 +221,9 @@ class _CheckItemsState<T> extends State<CheckItems<T>> {
     });
   }
 
-  void didUpdateWidget(oldWidget) {
+  @override
+  void didUpdateWidget(CheckItems<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget != widget && widget.syncWithInitial) {
       setState(() {
         currentValues = widget.initial ?? [];

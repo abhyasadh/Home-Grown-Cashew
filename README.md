@@ -17,7 +17,7 @@
   <a href="https://play.google.com/store/apps/details?id=com.budget.tracker_app">
     <img alt="Google Play Badge" src="promotional/store-banners/google-play-badge.png" height="60px">
   </a>
-  <a href="https://github.com/jameskokoska/Cashew/releases/">
+  <a href="https://github.com/abhyasadh/Home-Grown-Cashew/releases/">
     <img alt="GitHub Badge" src="promotional/store-banners/github-badge.png" height="60px">
   </a>
   <a href="https://budget-track.web.app/">
@@ -26,7 +26,7 @@
 </div>
 
 <h3 align="center" style="font-size:28px; line-height:1">
-  <a href="https://github.com/jameskokoska/Cashew/issues/725">🚀 Cashew Beta Testing</a>
+  <a href="https://github.com/abhyasadh/Home-Grown-Cashew/issues/725">🚀 Cashew Beta Testing</a>
 </h3>
 
 ---
@@ -39,74 +39,81 @@
   </div>
 </a>
 
-<br />
+<br>
 
-Cashew is a full-fledged, feature-rich application designed to empower users in managing their finances effectively. Built using Flutter - with Drift's SQL package, and Firebase - this app offers a seamless and intuitive user experience across various devices. Development started in September 2021.
+Cashew is a full-fledged, feature-rich application designed to empower users in managing their finances effectively. Built using Flutter - with Drift's SQL package, and a self-hosted Go server - this app offers a seamless and intuitive user experience across various devices. Development started in September 2021.
 
 ---
 
-## Features
+## 🚀 Self-Host with Docker (Recommended)
 
-<a href="https://www.youtube.com/watch?v=Oar9pkc7BSc&t=235s">
-  <div align="center">
-    <img width="80%" src="promotional/youtube-promo/thumbnail-oss.png" alt="Review Video">
-  </div>
-</a>
-<p align="center">
-  Cashew was featured on <a href="https://www.youtube.com/watch?v=Oar9pkc7BSc&t=235s">YouTube</a> on 'The Best Free and Open Source Apps in 2024!' (and in the thumbnail!)
-</p>
+Run your own Cashew server and access the web app from any browser. The mobile app can sync to it over your network.
 
-<br />
+### Prerequisites
 
-<a href="https://www.youtube.com/watch?v=NYZd7IKn1oY&t=536s">
-  <div align="center">
-    <img width="80%" src="promotional/youtube-promo/thumbnail-year-best.png" alt="Review Video">
-  </div>
-</a>
-<p align="center">
-  Cashew was featured on <a href="https://www.youtube.com/watch?v=NYZd7IKn1oY&t=536s">YouTube</a> on 'The Best Apps of 2023!'
-</p>
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-<br>
+### 1. Clone the repository
 
-<a href="https://www.youtube.com/watch?v=2MwWmqcn--s&t=261s">
-  <div align="center">
-    <img width="80%" src="promotional/youtube-promo/thumbnail.png" alt="Review Video">
-  </div>
-</a>
-<p align="center">
-  Cashew was featured on <a href="https://www.youtube.com/watch?v=2MwWmqcn--s&t=261s">YouTube</a> on 'Top Android Apps! (November 2023)'
-</p>
+```bash
+git clone https://github.com/abhyasadh/Home-Grown-Cashew.git
+cd Cashew
+```
 
-<br>
+### 2. Configure the server
 
-<div align="center">
-  <img width="80%" src="promotional/play-store-feature/play-store-feature.png" alt="Play Store Feature">
-</div>
-<p align="center">
-  Cashew was featured on <a href="https://play.google.com/store/apps/editorial?id=mc_apps_new_on_play_fcp">Google Play's Editorial 'New Apps We Love'</a> (November 2023)!
-</p>
+```bash
+cp .env.example .env
+# Edit .env and set a strong JWT_SECRET
+```
 
-<br>
+### 3. Start the server
 
-<a href="https://github.com/nyas1/Material-You-app-list?tab=readme-ov-file#-economy:~:text=MDY%20Celenganku-,MDY%20Cashew,-MDY%20Allowance%20FOSS">
-  <div align="center">
-    <img width="80%" src="promotional/material-apps-feature/material-apps-feature.png" alt="Material Apps List Feature">
-  </div>
-</a>
-<p align="center">
-  Cashew was featured in the <a href="https://github.com/nyas1/Material-You-app-list?tab=readme-ov-file#-economy:~:text=MDY%20Celenganku-,MDY%20Cashew,-MDY%20Allowance%20FOSS">Material You Apps List</a>!
-</p>
+```bash
+docker compose up -d
+# or: make up
+```
+
+The server will be available at `http://localhost:2580`.
+
+### 4. Register the admin account
+
+Open `http://localhost:2580` in a browser, go to **Settings → Server**, enter your server URL, and tap **Register**. The first registered account becomes the admin; registration is closed afterwards.
+
+### 5. Install the mobile app
+
+Download the pre-built APK from the [GitHub Releases](https://github.com/abhyasadh/Home-Grown-Cashew/releases) page, or build it yourself:
+
+```bash
+make apk
+```
+
+Then in the app, go to **Settings → Server** and enter your server URL (e.g. `http://192.168.1.50:2580` or `https://cashew.yourdomain.com`).
+
+### Useful commands
+
+```bash
+make up        # Start the server
+make down      # Stop the server
+make restart   # Restart the server
+make logs      # View server logs
+make build     # Rebuild the Docker image
+make apk       # Build Android APK locally
+make release VERSION=v5.5.0  # Tag and push a new release
+```
+
+---
 
 ## Release
 
 Check out the [official website](https://cashewapp.web.app/)!
 
-This application is available on the [App Store](https://apps.apple.com/us/app/cashew-expense-budget-tracker/id6463662930), [Google Play](https://play.google.com/store/apps/details?id=com.budget.tracker_app), [GitHub](https://github.com/jameskokoska/Cashew/releases/) and as a [Web App (PWA)](https://budget-track.web.app/).
+This application is available on the [App Store](https://apps.apple.com/us/app/cashew-expense-budget-tracker/id6463662930), [Google Play](https://play.google.com/store/apps/details?id=com.budget.tracker_app), [GitHub](https://github.com/abhyasadh/Home-Grown-Cashew/releases/) and as a [Web App (PWA)](https://budget-track.web.app/).
 
 ### Changelog
 
-Changes and progress about development is all heavily documented in GitHub [commits](https://github.com/jameskokoska/Cashew/commits/main) and in the [changelog](https://github.com/jameskokoska/Cashew/blob/main/budget/lib/widgets/showChangelog.dart)
+Changes and progress about development is all heavily documented in GitHub [commits](https://github.com/abhyasadh/Home-Grown-Cashew/commits/main) and in the [changelog](https://github.com/abhyasadh/Home-Grown-Cashew/blob/main/budget/lib/widgets/showChangelog.dart)
 
 ## Key Features
 
@@ -134,7 +141,7 @@ Changes and progress about development is all heavily documented in GitHub [comm
 ### 🔒 Enhanced Security and Accessibility
 
 - Biometric Lock: Secure budget data using biometric authentication, adding an extra layer of privacy.
-- Google Login: Conveniently log in to the app using your Google account, ensuring a streamlined and hassle-free authentication process.
+- Self-Hosted Server: Optionally self-host the sync/backup server with Docker.
 
 ### 🎨 User Experience and Design
 
@@ -143,12 +150,12 @@ Changes and progress about development is all heavily documented in GitHub [comm
 - Light and Dark Mode: Seamlessly switch between light and dark themes to optimize visibility and reduce eye strain.
 - Customizable Home Screen: Tailor the home screen layout and widgets to display the financial information that matters most to you, providing a personalized and efficient dashboard.
 - Detailed Graph Visuals: Gain valuable insights into spending patterns through detailed and interactive graphs, visualizing financial data at a glance.
-- Beautiful Adaptive UI: A responsive user interface that adapts flawlessly to both web and mobile platforms, providing an immersive and consistent user experience across devices.
+- Beautiful Adaptive UI: A responsive user interface that adapts flawlessly to web and mobile platforms, providing an immersive and consistent user experience across devices.
 
 ### ☁ Backup and Syncing
 
-- Cross-Device Sync: Keep budget data synchronized across all devices, ensuring access to financial information wherever you go.
-- Google Drive Backup: Safeguard budget data by utilizing Google Drive's backup functionality, allowing easy restoration of data if needed.
+- Cross-Device Sync: Keep budget data synchronized across all devices by connecting to your self-hosted Cashew server.
+- Self-Hosted Backups: Create named backups on your own server and restore them at any time.
 
 ### 💿 Smart Automation
 
@@ -181,7 +188,7 @@ The translations are available here: https://docs.google.com/spreadsheets/d/1QQq
 
 ### Pull Requests and Contributions
 
-Unfortunately, I am currently not accepting contributions due to licensing and credits. Since this application turns some profits, I want to avoid any muddy water when it comes to compensation for contributions. You are free to submit an [issue](https://github.com/jameskokoska/Cashew/issues) and I can consider it!
+Unfortunately, I am currently not accepting contributions due to licensing and credits. Since this application turns some profits, I want to avoid any muddy water when it comes to compensation for contributions. You are free to submit an [issue](https://github.com/abhyasadh/Home-Grown-Cashew/issues) and I can consider it!
 
 ### Android Release
 
@@ -195,20 +202,25 @@ Note: required Android SDK.
 
 Note: requires MacOS.
 
-### Firebase Deployment
-
-- To deploy to firebase, run `firebase deploy`
-
-Note: required Firebase.
-
 ### GitHub release
 
-- Create a tag for the current version specified in `pubspec.yaml`
-- `git tag <version>`
-- Push the tag
-- `git push origin <version>`
-- Create the release and upload binaries
-- https://github.com/jameskokoska/Cashew/releases/new
+Releases are now automated via GitHub Actions. Push a tag to trigger the workflow:
+
+```bash
+git tag v5.5.0
+git push origin v5.5.0
+```
+
+The workflow will build the Android APK/AAB, build and push a Docker image to GHCR, and create a GitHub Release with the APK/AAB attached.
+
+### Local Development Server
+
+```bash
+cd server
+go run ./cmd/server/main.go
+```
+
+The server will start on port `2580` by default.
 
 ### Scripts
 

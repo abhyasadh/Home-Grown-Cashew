@@ -1210,14 +1210,13 @@ class WalletDetailsPageState extends State<WalletDetailsPage>
       SliverToBoxAdapter(child: SizedBox(height: 40)),
     ];
 
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[listID] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[listID] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[listID] ?? []).isNotEmpty) {
           globalSelectedID.value[listID] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: PageFramework(
@@ -1924,7 +1923,7 @@ class _WalletCategoryPieChartState extends State<WalletCategoryPieChart> {
   TransactionCategory? selectedCategory = null;
   bool isIncome = false;
   GlobalKey<PieChartDisplayState> _pieChartDisplayStateKey = GlobalKey();
-  bool showAllSubcategories = appStateSettings["showAllSubcategories"];
+  bool showAllSubcategories = appStateSettings["showAllSubcategories"] ?? false;
 
   void toggleAllSubcategories() {
     setState(() {

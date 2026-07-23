@@ -309,7 +309,7 @@ Future markAsPaid({
   Transaction transactionNew = transaction.copyWith(
     paid: true,
     dateCreated:
-        appStateSettings["markAsPaidOnOriginalDay"] ? null : DateTime.now(),
+        appStateSettings["markAsPaidOnOriginalDay"] == true ? null : DateTime.now(),
     createdAnotherFutureTransaction: Value(true),
     originalDateDue: Value(transaction.dateCreated),
   );
@@ -606,16 +606,16 @@ Future openUnpayDebtCreditPopup(
 
 Future<bool> markSubscriptionsAsPaid(BuildContext context,
     {int? iteration}) async {
-  if (appStateSettings["automaticallyPaySubscriptions"] ||
+  if (appStateSettings["automaticallyPaySubscriptions"] == true ||
       appStateSettings["automaticallyPayRepetitive"]) {
     // Loop through, because a new one that was created automatically may be past due
     if (iteration != null && iteration > 50) {
       return true;
     }
     List<Transaction> subscriptions = [
-      if (appStateSettings["automaticallyPaySubscriptions"])
+      if (appStateSettings["automaticallyPaySubscriptions"] == true)
         ...(await database.getAllSubscriptions().$2),
-      if (appStateSettings["automaticallyPayRepetitive"])
+      if (appStateSettings["automaticallyPayRepetitive"] == true)
         ...(await database.getAllOverdueRepetitiveTransactions().$2)
     ];
 
@@ -660,7 +660,7 @@ Future<bool> markSubscriptionsAsPaid(BuildContext context,
 }
 
 Future<bool> markUpcomingAsPaid() async {
-  if (appStateSettings["automaticallyPayUpcoming"]) {
+  if (appStateSettings["automaticallyPayUpcoming"] == true) {
     List<Transaction> upcoming =
         await database.getAllOverdueUpcomingTransactions().$2;
     for (Transaction transaction in upcoming) {

@@ -154,35 +154,26 @@ class _ColorPickerState extends State<ColorPicker> {
 
   Color _calculateShadedColor(double position) {
     double ratio = position / widget.width;
+    int curRed = (_currentColor.r * 255).round();
+    int curGreen = (_currentColor.g * 255).round();
+    int curBlue = (_currentColor.b * 255).round();
     if (ratio > 0.5) {
       //Calculate new color (values converge to 255 to make the color lighter)
-      int redVal = _currentColor.red != 255
-          ? (_currentColor.red +
-                  (255 - _currentColor.red) * (ratio - 0.5) / 0.5)
-              .round()
+      int redVal = curRed != 255
+          ? (curRed + (255 - curRed) * (ratio - 0.5) / 0.5).round()
           : 255;
-      int greenVal = _currentColor.green != 255
-          ? (_currentColor.green +
-                  (255 - _currentColor.green) * (ratio - 0.5) / 0.5)
-              .round()
+      int greenVal = curGreen != 255
+          ? (curGreen + (255 - curGreen) * (ratio - 0.5) / 0.5).round()
           : 255;
-      int blueVal = _currentColor.blue != 255
-          ? (_currentColor.blue +
-                  (255 - _currentColor.blue) * (ratio - 0.5) / 0.5)
-              .round()
+      int blueVal = curBlue != 255
+          ? (curBlue + (255 - curBlue) * (ratio - 0.5) / 0.5).round()
           : 255;
       return Color.fromARGB(255, redVal, greenVal, blueVal);
     } else if (ratio < 0.5) {
       //Calculate new color (values converge to 0 to make the color darker)
-      int redVal = _currentColor.red != 0
-          ? (_currentColor.red * ratio / 0.5).round()
-          : 0;
-      int greenVal = _currentColor.green != 0
-          ? (_currentColor.green * ratio / 0.5).round()
-          : 0;
-      int blueVal = _currentColor.blue != 0
-          ? (_currentColor.blue * ratio / 0.5).round()
-          : 0;
+      int redVal = curRed != 0 ? (curRed * ratio / 0.5).round() : 0;
+      int greenVal = curGreen != 0 ? (curGreen * ratio / 0.5).round() : 0;
+      int blueVal = curBlue != 0 ? (curBlue * ratio / 0.5).round() : 0;
       return Color.fromARGB(255, redVal, greenVal, blueVal);
     } else {
       //return the base color
@@ -202,21 +193,15 @@ class _ColorPickerState extends State<ColorPicker> {
       _currentColor = _colors[index];
     } else {
       //calculate new color
-      int redValue = _colors[index].red == _colors[index + 1].red
-          ? _colors[index].red
-          : (_colors[index].red +
-                  (_colors[index + 1].red - _colors[index].red) * remainder)
-              .round();
-      int greenValue = _colors[index].green == _colors[index + 1].green
-          ? _colors[index].green
-          : (_colors[index].green +
-                  (_colors[index + 1].green - _colors[index].green) * remainder)
-              .round();
-      int blueValue = _colors[index].blue == _colors[index + 1].blue
-          ? _colors[index].blue
-          : (_colors[index].blue +
-                  (_colors[index + 1].blue - _colors[index].blue) * remainder)
-              .round();
+      int r1 = (_colors[index].r * 255).round();
+      int r2 = (_colors[index + 1].r * 255).round();
+      int g1 = (_colors[index].g * 255).round();
+      int g2 = (_colors[index + 1].g * 255).round();
+      int b1 = (_colors[index].b * 255).round();
+      int b2 = (_colors[index + 1].b * 255).round();
+      int redValue = r1 == r2 ? r1 : (r1 + (r2 - r1) * remainder).round();
+      int greenValue = g1 == g2 ? g1 : (g1 + (g2 - g1) * remainder).round();
+      int blueValue = b1 == b2 ? b1 : (b1 + (b2 - b1) * remainder).round();
       _currentColor = Color.fromARGB(255, redValue, greenValue, blueValue);
     }
     return _currentColor;
@@ -351,17 +336,17 @@ double lerp(double a, double b, double t) {
 
 Color lerpColor(Color a, Color b, double t) {
   return Color.fromARGB(
-    lerp(a.alpha.toDouble(), b.alpha.toDouble(), t).round(),
-    lerp(a.red.toDouble(), b.red.toDouble(), t).round(),
-    lerp(a.green.toDouble(), b.green.toDouble(), t).round(),
-    lerp(a.blue.toDouble(), b.blue.toDouble(), t).round(),
+    lerp(a.a * 255, b.a * 255, t).round(),
+    lerp(a.r * 255, b.r * 255, t).round(),
+    lerp(a.g * 255, b.g * 255, t).round(),
+    lerp(a.b * 255, b.b * 255, t).round(),
   );
 }
 
 double colorDistance(Color a, Color b) {
-  return sqrt(pow(a.red - b.red, 2) +
-      pow(a.green - b.green, 2) +
-      pow(a.blue - b.blue, 2));
+  return sqrt(pow((a.r - b.r) * 255, 2) +
+      pow((a.g - b.g) * 255, 2) +
+      pow((a.b - b.b) * 255, 2));
 }
 
 double findClosestColorPosition(

@@ -243,9 +243,12 @@ class MorePages extends StatelessWidget {
                       : SizedBox.shrink(),
               if (hasSideNavigation == false)
                 Expanded(
-                    child: GoogleAccountLoginButton(
-                  key: settingsGoogleAccountLoginButtonKey,
-                )),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        top: 5, bottom: 5, start: 4, end: 4),
+                    child: ServerLoginButton(isOutlined: true),
+                  ),
+                ),
             ],
           ),
           if (hasSideNavigation == false)
@@ -566,20 +569,20 @@ class SettingsPageContent extends StatelessWidget {
         // SettingsContainerOpenPage(
         //   openPage: AutoTransactionsPage(),
         //   title: "Auto Transactions",
-        //   icon: appStateSettings["outlinedIcons"] ? Icons.auto_fix_high_outlined : Icons.auto_fix_high_rounded,
+        //   icon: appStateSettings["outlinedIcons"] == true ? Icons.auto_fix_high_outlined : Icons.auto_fix_high_rounded,
         // ),
 
-        appStateSettings["emailScanning"]
+        appStateSettings["emailScanning"] == true
             ? SettingsContainerOpenPage(
                 openPage: AutoTransactionsPageEmail(),
                 title: "auto-email-transactions".tr(),
-                icon: appStateSettings["outlinedIcons"]
+                icon: appStateSettings["outlinedIcons"] == true
                     ? Icons.mark_email_unread_outlined
                     : Icons.mark_email_unread_rounded,
               )
             : SizedBox.shrink(),
 
-        appStateSettings["notificationScanningDebug"] &&
+        appStateSettings["notificationScanningDebug"] == true &&
                 getPlatform(ignoreEmulation: true) == PlatformOS.isAndroid
             ? SettingsContainerOpenPage(
                 title: "Notification Transactions",
@@ -618,9 +621,8 @@ class SettingsPageContent extends StatelessWidget {
 
         ImportDB(),
 
-        GoogleAccountLoginButton(
-          isOutlinedButton: false,
-          forceButtonName: "google-drive".tr(),
+        ServerLoginButton(
+          description: "server-settings-description".tr(),
         ),
       ],
     );
@@ -826,7 +828,7 @@ class BiometricsSettingToggle extends StatefulWidget {
 }
 
 class _BiometricsSettingToggleState extends State<BiometricsSettingToggle> {
-  bool isLocked = appStateSettings["requireAuth"];
+  bool isLocked = appStateSettings["requireAuth"] ?? false;
   @override
   Widget build(BuildContext context) {
     return Column(

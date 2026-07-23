@@ -8,7 +8,6 @@ import 'package:budget/widgets/globalSnackbar.dart';
 import 'package:budget/widgets/navigationFramework.dart';
 import 'package:budget/widgets/openPopup.dart';
 import 'package:budget/widgets/openSnackbar.dart';
-import 'package:budget/widgets/restartApp.dart';
 import 'package:budget/widgets/selectAmount.dart';
 import 'package:budget/widgets/textInput.dart';
 import 'package:budget/widgets/timeDigits.dart';
@@ -809,8 +808,7 @@ getTotalSubscriptions(AllWallets allWallets, SelectedSubscriptionsType type,
       subscription = subscription.copyWith(
           amount: subscription.amount *
               (amountRatioToPrimaryCurrencyGivenPk(
-                      allWallets, subscription.walletFk) ??
-                  0));
+                      allWallets, subscription.walletFk)));
       if (subscription.type == TransactionSpecialType.upcoming) {
         total += subscription.amount;
       } else if (subscription.periodLength == 0) {
@@ -899,7 +897,7 @@ List<BoxShadow> boxShadowCategoryPercent(context) {
 
 List<BoxShadow>? boxShadowCheck(list) {
   if (appStateSettings["disableShadows"] == true) return null;
-  if (appStateSettings["batterySaver"]) return null;
+  if (appStateSettings["batterySaver"] == true) return null;
   return list;
 }
 
@@ -950,13 +948,6 @@ void restartAppPopup(context,
       barrierDismissible: false,
       // Show code widget with the name of the file monospace font
     );
-  } else {
-    // Pop all routes, select home tab
-    RestartApp.restartApp(context);
-    popAllRoutes(context);
-    Future.delayed(Duration(milliseconds: 100), () {
-      PageNavigationFramework.changePage(context, 0, switchNavbar: true);
-    });
   }
 }
 
@@ -1124,7 +1115,7 @@ Future<String> getDeviceInfo() async {
       return info.model;
     } else if (Platform.isIOS) {
       IosDeviceInfo info = await deviceInfo.iosInfo;
-      return info.utsname.machine ?? info.model ?? "iOS";
+      return info.utsname.machine;
     } else if (Platform.isLinux) {
       LinuxDeviceInfo info = await deviceInfo.linuxInfo;
       return info.machineId ?? "Linux";
@@ -1242,9 +1233,11 @@ void copyToClipboard(String text,
 Future shareToClipboard(String text, {required BuildContext context}) async {
   try {
     final box = context.findRenderObject() as RenderBox?;
-    await Share.share(
-      text,
-      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    await SharePlus.instance.share(
+      ShareParams(
+        text: text,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      ),
     );
   } catch (e) {
     print("There was an error sharing: " + e.toString());

@@ -46,8 +46,8 @@ Map<String, NavBarIconData> getNavBarIconsData() {
       iconData: appStateSettings["outlinedIcons"]
           ? Icons.donut_small_outlined
           : MoreIcons.chart_pie,
-      iconScale: appStateSettings["outlinedIcons"] ? 1 : 0.87,
-      iconSize: appStateSettings["outlinedIcons"] ? 24 : 20,
+      iconScale: appStateSettings["outlinedIcons"] == true ? 1 : 0.87,
+      iconSize: appStateSettings["outlinedIcons"] == true ? 24 : 20,
       label: "budgets",
       navigationIndexedStackIndex: 2,
     ),
@@ -132,7 +132,7 @@ Map<String, NavBarIconData> getNavBarIconsData() {
       label: "budgets",
       labelLong: "budgets-details",
       navigationIndexedStackIndex: 10,
-      iconScale: appStateSettings["outlinedIcons"] ? 1 : 0.83,
+      iconScale: appStateSettings["outlinedIcons"] == true ? 1 : 0.83,
     ),
     "categoriesDetails": NavBarIconData(
       iconData: appStateSettings["outlinedIcons"]

@@ -123,7 +123,7 @@ class SelectedTransactionsAppBar extends StatelessWidget {
                         ),
                         onPressed: () {
                           globalSelectedID.value[pageID] = [];
-                          globalSelectedID.notifyListeners();
+                          globalSelectedID.notify();
                         },
                       ),
                       Expanded(
@@ -303,7 +303,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
       }
     }
     globalSelectedID.value[pageID] = [];
-    globalSelectedID.notifyListeners();
+    globalSelectedID.notify();
   }
 
   @override
@@ -349,7 +349,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                         );
                         if (result == DeletePopupAction.Delete) {
                           globalSelectedID.value[pageID] = [];
-                          globalSelectedID.notifyListeners();
+                          globalSelectedID.notify();
                         }
                       },
                     ),
@@ -381,7 +381,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                             ),
                           );
                           globalSelectedID.value[pageID] = [];
-                          globalSelectedID.notifyListeners();
+                          globalSelectedID.notify();
                         },
                       ),
                     if (globalTransactionsListedOnPageID[pageID] != null)
@@ -412,7 +412,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                           }
                           globalSelectedID.value[pageID] =
                               globalTransactionsListedOnPageID[pageID] ?? [];
-                          globalSelectedID.notifyListeners();
+                          globalSelectedID.notify();
                         },
                       ),
                     if (enableDuplicate)
@@ -474,7 +474,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                 ),
                               );
                               globalSelectedID.value[pageID] = [];
-                              globalSelectedID.notifyListeners();
+                              globalSelectedID.notify();
                             },
                           ),
                           EditSelectedTransactionsContainer(
@@ -557,7 +557,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                               );
 
                               globalSelectedID.value[pageID] = [];
-                              globalSelectedID.notifyListeners();
+                              globalSelectedID.notify();
                             },
                           ),
                           EditSelectedTransactionsContainer(
@@ -608,7 +608,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                 ),
                               );
                               globalSelectedID.value[pageID] = [];
-                              globalSelectedID.notifyListeners();
+                              globalSelectedID.notify();
                             },
                           ),
                           if (enableWalletSelection)
@@ -652,7 +652,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                   ),
                                 );
                                 globalSelectedID.value[pageID] = [];
-                                globalSelectedID.notifyListeners();
+                                globalSelectedID.notify();
                               },
                             ),
                           if (enableAddableBudgetSelection)
@@ -661,7 +661,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                   ? Icons.donut_small_outlined
                                   : MoreIcons.chart_pie,
                               iconScale:
-                                  appStateSettings["outlinedIcons"] ? 1 : 0.85,
+                                  appStateSettings["outlinedIcons"] == true ? 1 : 0.85,
                               text: "add-to-budget".tr(),
                               onTap: () async {
                                 dynamic budget =
@@ -708,7 +708,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                 );
 
                                 globalSelectedID.value[pageID] = [];
-                                globalSelectedID.notifyListeners();
+                                globalSelectedID.notify();
                               },
                             ),
                           if (enableObjectiveSelection)
@@ -760,7 +760,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                 );
 
                                 globalSelectedID.value[pageID] = [];
-                                globalSelectedID.notifyListeners();
+                                globalSelectedID.notify();
                               },
                             ),
                           if (enableObjectiveLoansSection)
@@ -810,7 +810,7 @@ class SelectedTransactionsAppBarMenu extends StatelessWidget {
                                 );
 
                                 globalSelectedID.value[pageID] = [];
-                                globalSelectedID.notifyListeners();
+                                globalSelectedID.notify();
                               },
                             ),
                         ];

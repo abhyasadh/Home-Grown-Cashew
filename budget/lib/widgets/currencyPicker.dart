@@ -301,7 +301,7 @@ class CurrencyItem extends StatelessWidget {
             borderRadius: BorderRadiusDirectional.circular(
                 getPlatform() == PlatformOS.isIOS ? 10 : 15),
             border: Border.all(
-              width: appStateSettings["materialYou"] ? 2 : 0,
+              width: appStateSettings["materialYou"] == true ? 2 : 0,
               color: appStateSettings["materialYou"] == true && selected
                   ? Theme.of(context).colorScheme.secondary
                   : Colors.transparent,

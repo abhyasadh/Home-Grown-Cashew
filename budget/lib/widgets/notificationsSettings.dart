@@ -43,7 +43,7 @@ class DailyNotificationsSettings extends StatefulWidget {
 
 class _DailyNotificationsSettingsState
     extends State<DailyNotificationsSettings> {
-  bool notificationsEnabled = appStateSettings["notifications"];
+  bool notificationsEnabled = appStateSettings["notifications"] ?? false;
   ReminderNotificationType selectedReminderType = ReminderNotificationType
       .values[appStateSettings["notificationsReminderType"]];
   TimeOfDay timeOfDay = TimeOfDay(
@@ -359,7 +359,6 @@ Future<bool> scheduleDailyNotification(
       chosenMessage,
       dateTime,
       notificationDetails,
-      androidAllowWhileIdle: true,
       payload: 'addTransaction',
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
@@ -445,7 +444,6 @@ Future<bool> scheduleUpcomingTransactionsNotification(context) async {
         chosenMessage,
         dateTime,
         notificationDetails,
-        androidAllowWhileIdle: true,
         payload: 'upcomingTransaction',
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
@@ -476,7 +474,7 @@ Future<bool> cancelUpcomingTransactionsNotification() async {
     endDate: DateTime.now().justDay(dayOffset: 30),
   );
   int idStart = 100;
-  for (Transaction upcomingTransaction in upcomingTransactions) {
+  for (int i = 0; i < upcomingTransactions.length; i++) {
     idStart++;
     await flutterLocalNotificationsPlugin.cancel(idStart);
   }

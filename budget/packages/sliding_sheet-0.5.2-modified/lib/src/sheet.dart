@@ -191,23 +191,23 @@ class SlidingSheet extends StatefulWidget {
   /// The value must be in the range from `-1.0` (far left) and `1.0` (far right).
   ///
   /// Defaults to `0.0` (center).
-  /// {@endTemplate}
+  /// {@endtemplate}
   final double axisAlignment;
 
   /// {@template sliding_sheet.extendBody}
   /// Whether to extend the scrollable body of the sheet under
   /// header and/or footer.
-  /// {@endTemplate}
+  /// {@endtemplate}
   final bool extendBody;
 
   /// {@template sliding_sheet.liftOnScrollHeaderElevation}
   /// The elevation of the header when the content scrolls under it.
-  /// {@endTemplate}
+  /// {@endtemplate}
   final double liftOnScrollHeaderElevation;
 
   /// {@template sliding_sheet.liftOnScrollFooterElevation}
   /// The elevation of the footer when there content scrolls under it.
-  /// {@endTemplate}
+  /// {@endtemplate}
   final double liftOnScrollFooterElevation;
 
   // * SlidingSheetDialog fields

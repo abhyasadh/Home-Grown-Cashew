@@ -77,7 +77,7 @@ class _AnimatedExpandedState extends State<AnimatedExpanded>
       opacity: fadeAnimation,
       child: SizeTransition(
         axis: widget.axis,
-        axisAlignment: 1.0,
+        alignment: Alignment.centerRight,
         sizeFactor: sizeAnimation,
         child: widget.child,
       ),

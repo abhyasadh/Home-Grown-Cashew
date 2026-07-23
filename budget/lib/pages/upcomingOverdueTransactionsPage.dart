@@ -59,14 +59,13 @@ class UpcomingOverdueTransactionsState
   @override
   Widget build(BuildContext context) {
     String pageId = "OverdueUpcoming";
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[pageId] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[pageId] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[pageId] ?? []).isNotEmpty) {
           globalSelectedID.value[pageId] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: PageFramework(

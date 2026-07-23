@@ -309,14 +309,13 @@ class CreditDebtTransactionsState extends State<CreditDebtTransactions>
       ),
     ];
 
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[pageId] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[pageId] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[pageId] ?? []).isNotEmpty) {
           globalSelectedID.value[pageId] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: StreamBuilder<List<Objective?>>(

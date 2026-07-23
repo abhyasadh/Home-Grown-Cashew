@@ -417,13 +417,16 @@ class CategoryEntry extends StatelessWidget {
         },
       ),
     );
-    return WillPopScope(
-      onWillPop: () async {
-        if (allSelected == false && selected) {
-          onTap(category, categoryBudgetLimit);
-          return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          if (allSelected == false && selected) {
+            onTap(category, categoryBudgetLimit);
+          } else {
+            Navigator.of(context).pop();
+          }
         }
-        return true;
       },
       child: AnimatedExpanded(
         expand:

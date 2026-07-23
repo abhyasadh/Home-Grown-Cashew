@@ -260,14 +260,13 @@ class _BudgetPageContentState extends State<_BudgetPageContent> {
         ? startDateString
         : startDateString + " – " + endDateString;
     bool showingSelectedPeriodAppBar = widget.openedFromHistory == true;
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[pageId] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[pageId] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[pageId] ?? []).isNotEmpty) {
           globalSelectedID.value[pageId] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: PageFramework(
@@ -736,7 +735,7 @@ class _BudgetPageContentState extends State<_BudgetPageContent> {
                         ),
                         SliverToBoxAdapter(
                             child: Column(children: [
-                          appStateSettings["sharedBudgets"]
+                          appStateSettings["sharedBudgets"] == true
                               ? BudgetSpenderSummary(
                                   budget: widget.budget,
                                   budgetRange: budgetRange,
@@ -913,9 +912,9 @@ class _BudgetPageContentState extends State<_BudgetPageContent> {
                             context,
                             Theme.of(context).colorScheme.secondaryContainer,
                             amountLight:
-                                appStateSettings["materialYou"] ? 0.25 : 0.4,
+                                appStateSettings["materialYou"] == true ? 0.25 : 0.4,
                             amountDark:
-                                appStateSettings["materialYou"] ? 0.4 : 0.55,
+                                appStateSettings["materialYou"] == true ? 0.4 : 0.55,
                           ),
                           buttonIconColor: dynamicPastel(
                               context,
@@ -1052,13 +1051,17 @@ class _BudgetLineGraphState extends State<BudgetLineGraph> {
   List<DateTimeRange> dateTimeRanges = [];
   int longestDateRange = 0;
 
+  @override
   void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
       _init();
     }
   }
 
-  initState() {
+  @override
+  void initState() {
+    super.initState();
     _init();
   }
 
@@ -1134,7 +1137,7 @@ class _BudgetLineGraphState extends State<BudgetLineGraph> {
   }
 
   // Whether to always show all the days of the budget in the line graph
-  bool showCompressedView = appStateSettings["showCompressedViewBudgetGraph"];
+  bool showCompressedView = appStateSettings["showCompressedViewBudgetGraph"] ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -1306,7 +1309,7 @@ class TotalSpent extends StatefulWidget {
 }
 
 class _TotalSpentState extends State<TotalSpent> {
-  bool showTotalSpent = appStateSettings["showTotalSpentForBudget"];
+  bool showTotalSpent = appStateSettings["showTotalSpentForBudget"] ?? false;
 
   _swapTotalSpentDisplay() {
     setState(() {

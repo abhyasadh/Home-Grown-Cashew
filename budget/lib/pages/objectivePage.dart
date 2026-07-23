@@ -76,7 +76,7 @@ class _ObjectivePageContentState extends State<_ObjectivePageContent> {
   final ConfettiController confettiController = ConfettiController();
   bool hasPlayedConfetti = false;
 
-  bool showTotalSpent = appStateSettings["showTotalSpentForObjective"];
+  bool showTotalSpent = appStateSettings["showTotalSpentForObjective"] ?? false;
 
   _swapTotalSpentDisplay() {
     setState(() {
@@ -183,14 +183,13 @@ class _ObjectivePageContentState extends State<_ObjectivePageContent> {
                     amount: 0.92)
                 : null;
     String pageId = widget.objective.objectivePk;
-    return WillPopScope(
-      onWillPop: () async {
-        if ((globalSelectedID.value[pageId] ?? []).length > 0) {
+    return PopScope(
+      canPop: (globalSelectedID.value[pageId] ?? []).isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if ((globalSelectedID.value[pageId] ?? []).isNotEmpty) {
           globalSelectedID.value[pageId] = [];
-          globalSelectedID.notifyListeners();
-          return false;
-        } else {
-          return true;
+          globalSelectedID.notify();
         }
       },
       child: Stack(
@@ -611,9 +610,9 @@ class _ObjectivePageContentState extends State<_ObjectivePageContent> {
                               context,
                               Theme.of(context).colorScheme.secondaryContainer,
                               amountLight:
-                                  appStateSettings["materialYou"] ? 0.25 : 0.4,
+                                  appStateSettings["materialYou"] == true ? 0.25 : 0.4,
                               amountDark:
-                                  appStateSettings["materialYou"] ? 0.4 : 0.55,
+                                  appStateSettings["materialYou"] == true ? 0.4 : 0.55,
                             ),
                             buttonIconColor: dynamicPastel(
                                 context,
